@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <item type="id" name="menu_image_select_sort" />
-    <item type="id" name="menu_image_list_view" />
-    <item type="id" name="menu_image_hide_sdcard" />
-</resources>
