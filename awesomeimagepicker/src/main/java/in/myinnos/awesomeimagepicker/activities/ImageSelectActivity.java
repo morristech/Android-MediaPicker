@@ -64,8 +64,8 @@ public class ImageSelectActivity extends HelperActivity {
     private MainImageAdapter adapter;
 
     private int countSelected;
-    private boolean multiSelect = false;
-    private boolean sortAssending = false;
+    private boolean multiSelectEnabled = false;
+    private boolean sortAscending = false;
     private boolean showListView = false;
 
     private ContentObserver observer;
@@ -82,7 +82,7 @@ public class ImageSelectActivity extends HelperActivity {
         @Override
         public void onClick(@NonNull Image img, @NonNull View view, int position) {
 
-            if (multiSelect) {
+            if (multiSelectEnabled) {
 
                 toggleSelection(position);
                 //actionMode.setTitle(countSelected + " " + getString(R.string.selected));
@@ -97,14 +97,17 @@ public class ImageSelectActivity extends HelperActivity {
                     tvProfile.setVisibility(View.VISIBLE);
                 }
             } else {
-                // TODO: 2018/08/28
+
+                startActivity(PreviewActivity.createIntent(view.getContext(), img));
+                finish();
+                overridePendingTransition(abc_fade_in, abc_fade_out);
             }
         }
 
         @Override
         public void onLongClick(@NonNull Image img, @NonNull View view, int position) {
 
-            multiSelect = !multiSelect;
+            multiSelectEnabled = !multiSelectEnabled;
             toggleSelection(position);
             //actionMode.setTitle(countSelected + " " + getString(R.string.selected));
             tvSelectCount.setText(countSelected + " " + getResources().getString(R.string.selected));
@@ -140,6 +143,7 @@ public class ImageSelectActivity extends HelperActivity {
             finish();
         }
         albumName = intent.getStringExtra(ConstantsCustomGallery.INTENT_EXTRA_ALBUM_NAME);
+        multiSelectEnabled = intent.getBooleanExtra(ConstantsCustomGallery.INTENT_EXTRA_MULTI_SELECTION, false);
         errorDisplay = (TextView) findViewById(R.id.text_view_error);
         errorDisplay.setVisibility(View.INVISIBLE);
 
@@ -255,7 +259,6 @@ public class ImageSelectActivity extends HelperActivity {
             }
         };
         observer = new ContentObserver(handler) {
-
             @Override
             public void onChange(boolean selfChange) {
                 loadImages();
@@ -313,7 +316,7 @@ public class ImageSelectActivity extends HelperActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_image_select, menu);
+        getMenuInflater().inflate(R.menu.menu_image_selection, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -328,8 +331,8 @@ public class ImageSelectActivity extends HelperActivity {
             //invalidateOptionsMenu();
             if (adapter != null) {
 
-                sortAssending = !sortAssending;
-                adapter.sortList(sortAssending);
+                sortAscending = !sortAscending;
+                adapter.sortList(sortAscending);
                 return true;
             }
             return false;
@@ -390,7 +393,7 @@ public class ImageSelectActivity extends HelperActivity {
     private void sendIntent() {
 
         Intent intent = new Intent();
-        intent.putParcelableArrayListExtra(ConstantsCustomGallery.INTENT_EXTRA_IMAGES, getSelected());
+        intent.putParcelableArrayListExtra(ConstantsCustomGallery.INTENT_EXTRA_LIST_IMAGES, getSelected());
         setResult(RESULT_OK, intent);
         finish();
         overridePendingTransition(abc_fade_in, abc_fade_out);

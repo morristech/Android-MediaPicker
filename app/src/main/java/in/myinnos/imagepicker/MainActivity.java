@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == ConstantsCustomGallery.REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             //The array list has the image paths of the selected images
-            ArrayList<Image> images = data.getParcelableArrayListExtra(ConstantsCustomGallery.INTENT_EXTRA_IMAGES);
+            ArrayList<Image> images = data.getParcelableArrayListExtra(ConstantsCustomGallery.INTENT_EXTRA_LIST_IMAGES);
             for (int i = 0; i < images.size(); i++) {
 
                 Uri uri = Uri.fromFile(new File(images.get(i).getPath()));

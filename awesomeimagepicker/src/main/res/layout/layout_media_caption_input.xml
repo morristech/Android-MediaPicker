@@ -54,7 +54,7 @@
             android:background="@android:color/white" />
 
         <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
-            android:id="@+id/edt_attachment_caption"
+            android:id="@+id/edt_caption"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start|center_vertical"
@@ -66,8 +66,8 @@
             android:minHeight="50dp"
             android:minLines="2"
             android:textAlignment="viewStart"
-            android:textColor="#999999"
-            android:textColorHint="@android:color/black"
+            android:textColor="@android:color/white"
+            android:textColorHint="#999999"
             android:textSize="16sp"
             app:emojiconAlignment="bottom"
             app:emojiconSize="20sp"

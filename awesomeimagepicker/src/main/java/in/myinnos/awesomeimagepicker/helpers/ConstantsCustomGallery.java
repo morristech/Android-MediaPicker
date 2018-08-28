@@ -26,8 +26,10 @@ public class ConstantsCustomGallery {
     public static final int PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 23;
 
     public static final String INTENT_EXTRA_ALBUM_NAME = "album";
-    public static final String INTENT_EXTRA_IMAGES = "images";
+    public static final String INTENT_EXTRA_IMAGE = "image";
+    public static final String INTENT_EXTRA_LIST_IMAGES = "list_images";
     public static final String INTENT_EXTRA_LIMIT = "limit";
+    public static final String INTENT_EXTRA_MULTI_SELECTION = "selection_mode";
     public static final int DEFAULT_LIMIT = 10;
 
     //Maximum number of images that can be selected at a time

@@ -59,6 +59,8 @@ public class AlbumSelectActivity extends HelperActivity {
     private Handler handler;
     private Thread thread;
 
+    private boolean multiSelectEnabled = false;
+
     private final String[] projection = new String[]{
             MediaStore.Images.Media.BUCKET_ID,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
@@ -78,7 +80,7 @@ public class AlbumSelectActivity extends HelperActivity {
             finish();
         }
         ConstantsCustomGallery.limit = intent.getIntExtra(ConstantsCustomGallery.INTENT_EXTRA_LIMIT, ConstantsCustomGallery.DEFAULT_LIMIT);
-
+        multiSelectEnabled = intent.getBooleanExtra(ConstantsCustomGallery.INTENT_EXTRA_MULTI_SELECTION, false);
         errorDisplay = (TextView) findViewById(R.id.text_view_error);
         errorDisplay.setVisibility(View.INVISIBLE);
 
@@ -97,6 +99,7 @@ public class AlbumSelectActivity extends HelperActivity {
 
                     Intent intent = new Intent(getApplicationContext(), ImageSelectActivity.class);
                     intent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_ALBUM_NAME, albums.get(position).getName());
+                    intent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_MULTI_SELECTION, multiSelectEnabled);
                     startActivityForResult(intent, ConstantsCustomGallery.REQUEST_CODE);
                 }
             }
