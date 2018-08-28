@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:id="@+id/album_item"
+                                             android:layout_width="168dp"
+                                             android:layout_height="168dp"
+                                             android:clipToPadding="false"
+                                             tools:ignore="RtlSymmetry,UnusedAttribute,ContentDescription">
+
+    <ImageView
+        android:id="@+id/image_view_album_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars"/>
+
+    <LinearLayout
+        android:id="@+id/media_bucket_info_container"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/transparent_50_alpha"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingLeft="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_view_album_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="top"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                tools:text="@tools:sample/cities"/>
+
+            <TextView
+                android:id="@+id/txt_album_timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="4dp"
+                android:gravity="bottom"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                tools:ignore="SmallSp"
+                tools:text="@tools:sample/date/ddmmyy"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/img_album_icon"
+        android:layout_width="20dp"
+        android:layout_height="22dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:adjustViewBounds="true"
+        android:scaleType="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/media_bucket_info_container"
+        app:layout_constraintTop_toTopOf="@+id/guideline_album_details"
+        app:srcCompat="@drawable/ic_folder"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_album_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="45dp"/>
+
+</android.support.constraint.ConstraintLayout>

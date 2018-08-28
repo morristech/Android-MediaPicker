@@ -2,6 +2,7 @@
     package="in.myinnos.awesomeimagepicker">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -19,6 +20,10 @@
             android:name=".activities.ImageSelectActivity"
             android:screenOrientation="portrait"
             android:hardwareAccelerated="true" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts"/>
 
     </application>
 

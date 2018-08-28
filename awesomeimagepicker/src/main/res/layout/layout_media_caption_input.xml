@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/attachment_input_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:clipToPadding="false">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_send_attachment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabCustomSize="52dp"
+        app:elevation="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/rv_selected_items"
+        app:layout_constraintEnd_toEndOf="@+id/input_container"
+        app:srcCompat="@drawable/ic_send"
+        app:useCompatPadding="true" />
+
+    <LinearLayout
+        android:id="@+id/input_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent_40_alpha"
+        android:clipToPadding="false"
+        android:minHeight="50dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/rv_selected_items"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="RtlSymmetry">
+
+        <ImageButton
+            android:id="@+id/btn_add_attachment"
+            android:layout_width="24dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:background="?android:selectableItemBackground"
+            android:contentDescription="@string/app_name"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_add_img" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:background="@android:color/white" />
+
+        <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
+            android:id="@+id/edt_attachment_caption"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start|center_vertical"
+            android:background="@null"
+            android:cursorVisible="true"
+            android:hint="Add Caption"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="6"
+            android:minHeight="50dp"
+            android:minLines="2"
+            android:textAlignment="viewStart"
+            android:textColor="#999999"
+            android:textColorHint="@android:color/black"
+            android:textSize="16sp"
+            app:emojiconAlignment="bottom"
+            app:emojiconSize="20sp"
+            app:emojiconUseSystemDefault="false"
+            app:fontFamily="@font/roboto"/>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_selected_items"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:clipToPadding="false"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/input_container"
+        app:layout_goneMarginTop="8dp"
+        tools:itemCount="4"
+        tools:layoutManager="android.support.v7.widget.GridLayoutManager"
+        tools:listitem="@layout/grid_view_item_image"
+        tools:orientation="horizontal"
+        tools:visibility="visible" />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="8dp"
+    android:paddingTop="9dp"
+    android:paddingRight="8dp"
+    android:paddingBottom="9dp">
+
+    <FrameLayout
+        android:id="@+id/image_container"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/img_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/app_name"
+            android:scaleType="centerCrop"
+            tools:src="@tools:sample/avatars"/>
+
+        <ImageView
+            android:id="@+id/img_alpha"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent_60_alpha"
+            android:contentDescription="@string/app_name"
+            android:scaleType="center"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_selected"
+            tools:visibility="visible"/>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/txt_image_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="11dp"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/image_container"
+        tools:text="@tools:sample/full_names"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="72dp"/>
+
+    <TextView
+        android:id="@+id/txt_image_display_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/image_container"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        tools:text="@tools:sample/date/ddmmyy"/>
+
+    <TextView
+        android:id="@+id/txt_image_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/image_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="@tools:sample/us_zipcodes"/>
+
+</android.support.constraint.ConstraintLayout>

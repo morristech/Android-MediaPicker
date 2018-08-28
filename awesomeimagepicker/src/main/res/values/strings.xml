@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Awesome Image Picker</string>
+    <string name="app_name">Image Picker</string>
 
     <!--Request Permission-->
     <string name="permission_info">App requires permission to Storage to view images.</string>
@@ -11,9 +11,21 @@
     <string name="album_view">Select photo album</string>
     <string name="image_view">Tap to select images</string>
 
+    <string name="sort">Sort</string>
+    <string name="hide_sdcard">Hide SD card</string>
+    <string name="show_list_view">List view</string>
     <string name="selected">selected</string>
     <string name="limit_exceeded">Can select a maximum of %d images</string>
     <string name="error_null_cursor">Oops, something went wrong!</string>
-    <string name="add">ADD</string>
+    <string name="add">Add</string>
     <string name="capture_photo">Capture Photo</string>
+
+    <string name="selection_limiter_pix">Cant select more than %d items.</string>
+    <string name="pix_ok">OK</string>
+    <string name="pix_tap_to_select">Tap photo to select</string>
+    <string name="pix_selected">Selected</string>
+    <string name="pix_recent">Recent</string>
+    <string name="pix_last_month">Last Month</string>
+    <string name="pix_last_week">Last Week</string>
+
 </resources>
