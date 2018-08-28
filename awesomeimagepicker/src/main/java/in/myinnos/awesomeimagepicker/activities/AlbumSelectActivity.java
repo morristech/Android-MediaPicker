@@ -24,8 +24,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 
 import in.myinnos.awesomeimagepicker.adapter.CustomAlbumSelectAdapter;
 import in.myinnos.awesomeimagepicker.R;
@@ -91,6 +94,7 @@ public class AlbumSelectActivity extends HelperActivity {
                 if (albums.get(position).getName().equals(getString(R.string.capture_photo))) {
                     //HelperClass.displayMessageOnScreen(getApplicationContext(), "HMM!", false);
                 } else {
+
                     Intent intent = new Intent(getApplicationContext(), ImageSelectActivity.class);
                     intent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_ALBUM_NAME, albums.get(position).getName());
                     startActivityForResult(intent, ConstantsCustomGallery.REQUEST_CODE);
@@ -157,7 +161,6 @@ public class AlbumSelectActivity extends HelperActivity {
             }
         };
         getContentResolver().registerContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false, observer);
-
         checkPermission();
     }
 
@@ -247,7 +250,8 @@ public class AlbumSelectActivity extends HelperActivity {
         startThread(new AlbumLoaderRunnable());
     }
 
-    private class AlbumLoaderRunnable implements Runnable {
+    private final class AlbumLoaderRunnable implements Runnable {
+
         @Override
         public void run() {
 
@@ -274,6 +278,7 @@ public class AlbumSelectActivity extends HelperActivity {
                     String album = cursor.getString(cursor.getColumnIndex(projection[1]));
                     String image = cursor.getString(cursor.getColumnIndex(projection[2]));
                     long albumTimestamp = cursor.getLong(cursor.getColumnIndex(projection[3]));
+                    String displayDate = new SimpleDateFormat("dd MMMM", Locale.getDefault()).format(new Date(albumTimestamp));
                     if (!albumSet.contains(albumId)) {
                         /*
                         It may happen that some image file paths are still present in cache,
@@ -285,7 +290,7 @@ public class AlbumSelectActivity extends HelperActivity {
                         if (file.exists()) {
 
                             // TODO: 2018/08/28 Complete implementation
-                            temp.add(new Album(album, image, "", R.drawable.ic_folder));
+                            temp.add(new Album(album, image, displayDate, R.drawable.ic_folder));
                             /*if (!album.equals("Hiding particular folder")) {
                                 temp.add(new Album(album, image));
                             }*/
@@ -311,16 +316,17 @@ public class AlbumSelectActivity extends HelperActivity {
     }
 
     private void startThread(Runnable runnable) {
+
         stopThread();
         thread = new Thread(runnable);
         thread.start();
     }
 
     private void stopThread() {
+
         if (thread == null || !thread.isAlive()) {
             return;
         }
-
         thread.interrupt();
         try {
             thread.join();
@@ -330,10 +336,10 @@ public class AlbumSelectActivity extends HelperActivity {
     }
 
     private void sendMessage(int what) {
+
         if (handler == null) {
             return;
         }
-
         Message message = handler.obtainMessage();
         message.what = what;
         message.sendToTarget();
@@ -341,6 +347,7 @@ public class AlbumSelectActivity extends HelperActivity {
 
     @Override
     protected void permissionGranted() {
+
         Message message = handler.obtainMessage();
         message.what = ConstantsCustomGallery.PERMISSION_GRANTED;
         message.sendToTarget();
@@ -348,6 +355,7 @@ public class AlbumSelectActivity extends HelperActivity {
 
     @Override
     protected void hideViews() {
+
         loader.setVisibility(View.GONE);
         gridView.setVisibility(View.INVISIBLE);
     }

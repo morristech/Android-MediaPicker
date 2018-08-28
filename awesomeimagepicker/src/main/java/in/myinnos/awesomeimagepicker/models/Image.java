@@ -13,16 +13,18 @@ public class Image implements Parcelable {
     private String headerDate;
     private String contentPath;
     private String path;
+    private String caption;
     private long timestamp;
     private boolean isSelected;
 
-    public Image(long id, String name, String headerDate, String contentPath, String path, long timestamp, boolean isSelected) {
+    public Image(long id, String name, String headerDate, String contentPath, String path, String caption, long timestamp, boolean isSelected) {
 
         this.id = id;
         this.name = name;
         this.headerDate = headerDate;
         this.contentPath = contentPath;
         this.path = path;
+        this.caption = caption;
         this.timestamp = timestamp;
         this.isSelected = isSelected;
     }
@@ -67,12 +69,12 @@ public class Image implements Parcelable {
         this.path = path;
     }
 
-    public boolean isSelected() {
-        return isSelected;
+    public String getCaption() {
+        return caption;
     }
 
-    public void setSelected(boolean selected) {
-        isSelected = selected;
+    public void setCaption(String caption) {
+        this.caption = caption;
     }
 
     public long getTimestamp() {
@@ -81,6 +83,14 @@ public class Image implements Parcelable {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     @Override
@@ -96,6 +106,7 @@ public class Image implements Parcelable {
         dest.writeString(this.headerDate);
         dest.writeString(this.contentPath);
         dest.writeString(this.path);
+        dest.writeString(this.caption);
         dest.writeLong(this.timestamp);
         dest.writeByte(this.isSelected ? (byte) 1 : (byte) 0);
     }
@@ -107,6 +118,7 @@ public class Image implements Parcelable {
         this.headerDate = in.readString();
         this.contentPath = in.readString();
         this.path = in.readString();
+        this.caption = in.readString();
         this.timestamp = in.readLong();
         this.isSelected = in.readByte() != 0;
     }

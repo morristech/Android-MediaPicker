@@ -14,7 +14,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,8 +29,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 
-import in.myinnos.awesomeimagepicker.Utility;
 import in.myinnos.awesomeimagepicker.R;
+import in.myinnos.awesomeimagepicker.Utility;
 import in.myinnos.awesomeimagepicker.adapter.MainImageAdapter;
 import in.myinnos.awesomeimagepicker.callbacks.OnSelectionListener;
 import in.myinnos.awesomeimagepicker.helpers.ConstantsCustomGallery;
@@ -73,7 +72,10 @@ public class ImageSelectActivity extends HelperActivity {
     private Handler handler;
     private Thread thread;
 
-    private final String[] projection = new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media.DATE_TAKEN};
+    private final String[] projection = new String[]{MediaStore.Images.Media._ID,
+                                                     MediaStore.Images.Media.DISPLAY_NAME,
+                                                     MediaStore.Images.Media.DATA,
+                                                     MediaStore.Images.Media.DATE_TAKEN};
 
     private final OnSelectionListener onSelectionListener = new OnSelectionListener() {
 
@@ -148,6 +150,7 @@ public class ImageSelectActivity extends HelperActivity {
         linearLayoutManager = new LinearLayoutManager(ImageSelectActivity.this);
 
         liFinish.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
 
@@ -161,9 +164,13 @@ public class ImageSelectActivity extends HelperActivity {
         });
 
         tvAdd.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                sendIntent();
+                //sendIntent();
+                startActivity(PreviewActivity.createIntent(v.getContext(), getSelected()));
+                finish();
+                overridePendingTransition(abc_fade_in, abc_fade_out);
             }
         });
     }
@@ -173,6 +180,7 @@ public class ImageSelectActivity extends HelperActivity {
 
         super.onStart();
         handler = new Handler() {
+
             @Override
             public void handleMessage(Message msg) {
 
@@ -200,6 +208,7 @@ public class ImageSelectActivity extends HelperActivity {
                             adapter = new MainImageAdapter(ImageSelectActivity.this);
                             adapter.addImageList(images);
                             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+
                                 @Override
                                 public int getSpanSize(int position) {
 
@@ -246,6 +255,7 @@ public class ImageSelectActivity extends HelperActivity {
             }
         };
         observer = new ContentObserver(handler) {
+
             @Override
             public void onChange(boolean selfChange) {
                 loadImages();
@@ -342,7 +352,7 @@ public class ImageSelectActivity extends HelperActivity {
     private void toggleSelection(int position) {
 
         if (!images.get(position).isSelected() && countSelected >= ConstantsCustomGallery.limit) {
-            Toast.makeText(getApplicationContext(), String.format(getString(R.string.limit_exceeded), ConstantsCustomGallery.DEFAULT_LIMIT), Toast.LENGTH_SHORT) .show();
+            Toast.makeText(getApplicationContext(), String.format(getString(R.string.limit_exceeded), ConstantsCustomGallery.DEFAULT_LIMIT), Toast.LENGTH_SHORT).show();
             return;
         }
         images.get(position).setSelected(!images.get(position).isSelected());
@@ -391,8 +401,10 @@ public class ImageSelectActivity extends HelperActivity {
     }
 
     private class ImageLoaderRunnable implements Runnable {
+
         @Override
         public void run() {
+
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
             /*
             If the adapter is null, this is first time this activity's view is
@@ -452,9 +464,9 @@ public class ImageSelectActivity extends HelperActivity {
                     String dateDifference = Utility.getDateDifference(ImageSelectActivity.this, calendar);
                     if (!header.equalsIgnoreCase("" + dateDifference)) {
                         header = "" + dateDifference;
-                        temp.add(new Image(-1, "", dateDifference, "", "", capturedTimestamp, isSelected));
+                        temp.add(new Image(-1, "", dateDifference, "", "", "", capturedTimestamp, isSelected));
                     }
-                    temp.add(new Image(id, header, name, contentPath.toString(), path, capturedTimestamp, isSelected));
+                    temp.add(new Image(id, header, name, contentPath.toString(), path, "",capturedTimestamp, isSelected));
                 } while (cursor.moveToPrevious());
             }
             cursor.close();

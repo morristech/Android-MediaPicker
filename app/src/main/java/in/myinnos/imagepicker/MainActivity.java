@@ -27,7 +27,7 @@ import in.myinnos.awesomeimagepicker.models.Image;
 public class MainActivity extends AppCompatActivity {
 
     private static final int READ_STORAGE_PERMISSION = 4000;
-    private static final int LIMIT = 5;
+    private static final int LIMIT = 10;
     private ImageView imageView;
     private TextView txImageSelects;
 
@@ -66,26 +66,23 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == ConstantsCustomGallery.REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             //The array list has the image paths of the selected images
             ArrayList<Image> images = data.getParcelableArrayListExtra(ConstantsCustomGallery.INTENT_EXTRA_IMAGES);
-
             for (int i = 0; i < images.size(); i++) {
-                Uri uri = Uri.fromFile(new File(images.get(i).getPath()));
 
+                Uri uri = Uri.fromFile(new File(images.get(i).getPath()));
                 RequestOptions options = new RequestOptions().placeholder(in.myinnos.awesomeimagepicker.R.color.colorAccent).override(400, 400).transform(new CenterCrop()).transform(new FitCenter());
                 Glide.with(this).load(uri)
                         .apply(options)
                         .into(imageView);
-
                 txImageSelects.setText(txImageSelects.getText().toString().trim()
                         + "\n" +
                         String.valueOf(i + 1) + ". " + String.valueOf(uri));
             }
-
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -95,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.github:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/myinnos")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/zapper")));
             default:
                 return super.onOptionsItemSelected(item);
         }

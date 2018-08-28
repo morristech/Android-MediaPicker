@@ -27,11 +27,11 @@
                 android:id="@+id/tvSelectCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="45dp"
                 android:layout_marginStart="45dp"
+                android:layout_marginLeft="45dp"
                 android:textColor="#ffffff"
                 android:textSize="16sp"
                 android:visibility="gone"/>
@@ -54,6 +54,8 @@
                 android:layout_centerInParent="true"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
+                android:clickable="true"
+                android:focusable="true"
                 android:padding="5dp"
                 android:text="@string/add"
                 android:textColor="#ffffff"
@@ -68,11 +70,11 @@
                 <ImageView
                     android:layout_width="26dp"
                     android:layout_height="26dp"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
                     android:src="@drawable/ic_arrow_left"/>
 
             </LinearLayout>
