@@ -103,29 +103,18 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (holder instanceof Holder) {
 
             Holder imageHolder = (Holder) holder;
-            int margin = 2;
-            float size = Utility.convertDpToPixel(72, context) - 2;
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams((int) size, (int) size);
-            layoutParams.setMargins(margin, margin, margin, margin);
-            imageHolder.itemView.setLayoutParams(layoutParams);
-            int padding = (int) (size / 3.5);
-            imageHolder.selection.setPadding(padding, padding, padding, padding);
-            imageHolder.preview.setLayoutParams(layoutParams);
-
             glide.load(image.getContentPath()).into(imageHolder.preview);
             imageHolder.selection.setVisibility(image.isSelected() ? View.GONE : View.VISIBLE);
         } else {
 
             HolderNone noneHolder = (HolderNone) holder;
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(0, 0);
-            noneHolder.itemView.setLayoutParams(layoutParams);
             noneHolder.itemView.setVisibility(View.GONE);
         }
     }
 
     @Override
     public int getItemCount() {
-        return images.size();
+        return images != null ? images.size() : 0;
     }
 
     public class Holder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {

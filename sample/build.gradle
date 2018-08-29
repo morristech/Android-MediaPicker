@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion "28.0.2"
     defaultConfig {
-        applicationId "in.myinnos.imagepicker"
+        applicationId "mobi.zapzap.imagepicker"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
