@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 import mobi.zapzap.mediapicker.R;
 import mobi.zapzap.mediapicker.adapter.ImagePreviewAdapter;
-import mobi.zapzap.mediapicker.callbacks.OnSelectionListener;
-import mobi.zapzap.mediapicker.helpers.ConstantsCustomGallery;
+import mobi.zapzap.mediapicker.callbacks.OnImageSelectionListener;
+import mobi.zapzap.mediapicker.helpers.Constants;
 import mobi.zapzap.mediapicker.models.Image;
 
 import static mobi.zapzap.mediapicker.R.anim.abc_fade_in;
@@ -47,7 +47,7 @@ public class PreviewActivity extends AppCompatActivity {
 
     private Image currentImage;
 
-    private final OnSelectionListener onSelectionListener = new OnSelectionListener() {
+    private final OnImageSelectionListener onSelectionListener = new OnImageSelectionListener() {
 
         @Override
         public void onClick(@NonNull Image img, @NonNull View view, int position) {
@@ -75,14 +75,14 @@ public class PreviewActivity extends AppCompatActivity {
     public static Intent createIntent(@NonNull Context context, @NonNull Image image) {
 
         Intent intent = new Intent(context, PreviewActivity.class);
-        intent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_IMAGE, image);
+        intent.putExtra(Constants.INTENT_EXTRA_IMAGE, image);
         return intent;
     }
 
     public static Intent createIntent(@NonNull Context context, @NonNull ArrayList<Image> images) {
 
         Intent intent = new Intent(context, PreviewActivity.class);
-        intent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_LIST_IMAGES, images);
+        intent.putExtra(Constants.INTENT_EXTRA_LIST_IMAGES, images);
         return intent;
     }
 
@@ -107,12 +107,12 @@ public class PreviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_preview);
         if (getIntent() != null) {
 
-            if (getIntent().hasExtra(ConstantsCustomGallery.INTENT_EXTRA_LIST_IMAGES)) {
-                selectedImages = getIntent().getParcelableArrayListExtra(ConstantsCustomGallery.INTENT_EXTRA_LIST_IMAGES);
-            } else if (getIntent().hasExtra(ConstantsCustomGallery.INTENT_EXTRA_IMAGE)){
+            if (getIntent().hasExtra(Constants.INTENT_EXTRA_LIST_IMAGES)) {
+                selectedImages = getIntent().getParcelableArrayListExtra(Constants.INTENT_EXTRA_LIST_IMAGES);
+            } else if (getIntent().hasExtra(Constants.INTENT_EXTRA_IMAGE)){
 
                 selectedImages = new ArrayList<Image>();
-                Image image = getIntent().getParcelableExtra(ConstantsCustomGallery.INTENT_EXTRA_IMAGE);
+                Image image = getIntent().getParcelableExtra(Constants.INTENT_EXTRA_IMAGE);
                 if (image != null) {
                     selectedImages.add(image);
                 }
@@ -130,9 +130,9 @@ public class PreviewActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
                     Intent intent = new Intent(v.getContext(), AlbumSelectActivity.class);
-                    intent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_LIMIT, ConstantsCustomGallery.DEFAULT_LIMIT);
-                    intent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_MULTI_SELECTION, true);
-                    startActivityForResult(intent, ConstantsCustomGallery.REQUEST_CODE);
+                    intent.putExtra(Constants.INTENT_EXTRA_LIMIT, Constants.DEFAULT_LIMIT);
+                    intent.putExtra(Constants.INTENT_EXTRA_MULTI_SELECTION, true);
+                    startActivityForResult(intent, Constants.REQUEST_CODE);
                 }
             });
             btnSend = (FloatingActionButton) findViewById(R.id.btn_send_attachment);
@@ -190,7 +190,7 @@ public class PreviewActivity extends AppCompatActivity {
     private void sendIntent() {
 
         Intent intent = new Intent();
-        intent.putParcelableArrayListExtra(ConstantsCustomGallery.INTENT_EXTRA_LIST_IMAGES, selectedImages);
+        intent.putParcelableArrayListExtra(Constants.INTENT_EXTRA_LIST_IMAGES, selectedImages);
         setResult(RESULT_OK, intent);
         finish();
         overridePendingTransition(abc_fade_in, abc_fade_out);

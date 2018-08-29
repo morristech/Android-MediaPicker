@@ -6,7 +6,8 @@ import android.provider.MediaStore;
 /**
  * Created by MyInnos on 03-11-2016.
  */
-public class ConstantsCustomGallery {
+public class Constants {
+
     public static final int PERMISSION_REQUEST_CODE = 1000;
     public static final int PERMISSION_GRANTED = 1001;
     public static final int PERMISSION_DENIED = 1002;
@@ -18,6 +19,13 @@ public class ConstantsCustomGallery {
     public static final int FETCH_STARTED = 2001;
     public static final int FETCH_COMPLETED = 2002;
     public static final int ERROR = 2005;
+
+    public static final int ALBUM_GRID_SPAN_COUNT = 2;
+    public static final int IMAGE_GRID_SPAN_COUNT = 3;
+
+    public static final int VIEW_TYPE_LOADING = 0;
+    public static final int VIEW_TYPE_HEADER = 1;
+    public static final int VIEW_TYPE_ITEM = 2;
 
     /**
      * Request code for permission has to be < (1 << 8)

@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="54dp"
-             android:layout_height="54dp"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:paddingBottom="1dp"
-             android:paddingEnd="1dp"
-             android:paddingStart="1dp"
-             android:paddingTop="1dp">
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/preview_image_item"
+    android:layout_width="54dp"
+    android:layout_height="54dp">
 
-    <ImageView
+    <mobi.zapzap.mediapicker.widget.SquareImageView
         android:id="@+id/img_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name"
         android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars"/>
 
-    <ImageView
+    <mobi.zapzap.mediapicker.widget.SquareImageView
         android:id="@+id/img_selection"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparent_20_alpha"
         android:contentDescription="@string/app_name"
         android:scaleType="center"
-        tools:visibility="visible" />
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/img_thumbnail"
+        app:layout_constraintEnd_toEndOf="@+id/img_thumbnail"
+        app:layout_constraintStart_toStartOf="@+id/img_thumbnail"
+        app:layout_constraintTop_toTopOf="@+id/img_thumbnail"
+        tools:visibility="gone"/>
 
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

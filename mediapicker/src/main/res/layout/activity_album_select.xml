@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_album_select"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/layout_album_select"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false">
 
     <include
         android:id="@+id/toolbar_image_picker"
@@ -11,31 +12,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <ProgressBar
-        android:id="@+id/loader"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
-
     <TextView
         android:id="@+id/text_view_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/error_null_cursor" />
+        android:text="@string/error_null_cursor"
+        android:visibility="gone"/>
 
-    <GridView
-        android:id="@+id/grid_view_album_select"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/grid_view_album"
+        android:layout_below="@id/toolbar_image_picker"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar_image_picker"
-        android:paddingBottom="1dp"
-        android:paddingStart="1dp"
-        android:paddingEnd="1dp"
-        android:paddingTop="1dp"
         android:clipToPadding="false"
-        android:stretchMode="columnWidth" />
+        tools:layoutManager="android.support.v7.widget.GridLayoutManager"
+        tools:listitem="@layout/grid_view_item_album"
+        tools:spanCount="2"/>
 
 </RelativeLayout>

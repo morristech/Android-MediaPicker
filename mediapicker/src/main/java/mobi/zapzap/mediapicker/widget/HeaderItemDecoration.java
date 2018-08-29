@@ -1,10 +1,9 @@
-package mobi.zapzap.mediapicker.helpers;
+package mobi.zapzap.mediapicker.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +17,10 @@ public class HeaderItemDecoration extends RecyclerView.ItemDecoration {
   private int stickyHeaderHeight;
   private Context context;
 
-  public HeaderItemDecoration(Context context, RecyclerView recyclerView, @NonNull StickyHeaderInterface listener) {
+  public HeaderItemDecoration(@NonNull Context context, @NonNull StickyHeaderInterface listener) {
 
-    this.stickyHeaderInterface = listener;
     this.context = context;
+    this.stickyHeaderInterface = listener;
   }
 
   @Override
@@ -45,8 +44,8 @@ public class HeaderItemDecoration extends RecyclerView.ItemDecoration {
     fixLayoutSize(parent, currentHeader);
     int contactPoint = currentHeader.getBottom();
     View childInContact = getChildInContact(parent, contactPoint);
-    if (Utility.isNull(childInContact)) {
-      Log.e("childInContact", "childInContact is null");
+    if (null == childInContact) {
+      //Timber.tag("childInContact").e("childInContact is null");
       return;
     }
     if (stickyHeaderInterface.isHeader(parent.getChildAdapterPosition(childInContact))) {
@@ -65,7 +64,7 @@ public class HeaderItemDecoration extends RecyclerView.ItemDecoration {
     return header;
   }
 
-  private void drawHeader(Canvas c, View header) {
+  private void drawHeader(@NonNull Canvas c, @NonNull View header) {
 
     c.save();
     c.translate(0, 0);
@@ -73,14 +72,15 @@ public class HeaderItemDecoration extends RecyclerView.ItemDecoration {
     c.restore();
   }
 
-  private void moveHeader(Canvas c, View currentHeader, View nextHeader) {
+  private void moveHeader(@NonNull Canvas c, @NonNull View currentHeader, @NonNull View nextHeader) {
+
     c.save();
     c.translate(0, nextHeader.getTop() - currentHeader.getHeight());
     currentHeader.draw(c);
     c.restore();
   }
 
-  private View getChildInContact(RecyclerView parent, int contactPoint) {
+  private View getChildInContact(@NonNull RecyclerView parent, int contactPoint) {
 
     View childInContact = null;
     for (int i = 0; i < parent.getChildCount(); i++) {
@@ -101,7 +101,7 @@ public class HeaderItemDecoration extends RecyclerView.ItemDecoration {
    *
    * @param parent ViewGroup: RecyclerView in this case.
    */
-  private void fixLayoutSize(ViewGroup parent, View view) {
+  private void fixLayoutSize(@NonNull ViewGroup parent, @NonNull View view) {
 
     // Specs for parent (RecyclerView)
     int widthSpec = View.MeasureSpec.makeMeasureSpec(parent.getWidth(), View.MeasureSpec.EXACTLY);
@@ -140,7 +140,7 @@ public class HeaderItemDecoration extends RecyclerView.ItemDecoration {
      * @param header View. Header to set the data on.
      * @param headerPosition int. Position of the header item in the adapter.
      */
-    void bindHeaderData(View header, int headerPosition);
+    void bindHeaderData(@NonNull View header, int headerPosition);
 
     /**
      * This method gets called by {@link HeaderItemDecoration} to verify whether the item represents

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Media Picker</string>
 
@@ -13,6 +14,7 @@
     <string name="sort">Sort</string>
     <string name="hide_sdcard">Hide SD card</string>
     <string name="show_list_view">List view</string>
+
     <string name="selected">selected</string>
     <string name="limit_exceeded">Select a maximum of %1$d images.</string>
     <string name="error_null_cursor">Oops, something went wrong!</string>

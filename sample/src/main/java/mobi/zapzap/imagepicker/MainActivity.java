@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import mobi.zapzap.mediapicker.activities.AlbumSelectActivity;
-import mobi.zapzap.mediapicker.helpers.ConstantsCustomGallery;
+import mobi.zapzap.mediapicker.helpers.Constants;
 import mobi.zapzap.mediapicker.models.Image;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,13 +47,13 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         // opining custom gallery
                         Intent intent = new Intent(MainActivity.this, AlbumSelectActivity.class);
-                        intent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_LIMIT, LIMIT);
-                        startActivityForResult(intent, ConstantsCustomGallery.REQUEST_CODE);
+                        intent.putExtra(Constants.INTENT_EXTRA_LIMIT, LIMIT);
+                        startActivityForResult(intent, Constants.REQUEST_CODE);
                     }
                 }else{
                     Intent intent = new Intent(MainActivity.this, AlbumSelectActivity.class);
-                    intent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_LIMIT, LIMIT);
-                    startActivityForResult(intent, ConstantsCustomGallery.REQUEST_CODE);
+                    intent.putExtra(Constants.INTENT_EXTRA_LIMIT, LIMIT);
+                    startActivityForResult(intent, Constants.REQUEST_CODE);
                 }
             }
         });
@@ -63,9 +63,9 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ConstantsCustomGallery.REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == Constants.REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             //The array list has the image paths of the selected images
-            ArrayList<Image> images = data.getParcelableArrayListExtra(ConstantsCustomGallery.INTENT_EXTRA_LIST_IMAGES);
+            ArrayList<Image> images = data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_LIST_IMAGES);
             for (int i = 0; i < images.size(); i++) {
 
                 Uri uri = Uri.fromFile(new File(images.get(i).getPath()));

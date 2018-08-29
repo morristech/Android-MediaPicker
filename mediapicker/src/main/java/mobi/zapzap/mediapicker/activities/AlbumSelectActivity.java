@@ -1,8 +1,6 @@
 package mobi.zapzap.mediapicker.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,15 +9,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
-import android.util.DisplayMetrics;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.File;
@@ -29,10 +25,12 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 
-import mobi.zapzap.mediapicker.adapter.CustomAlbumSelectAdapter;
 import mobi.zapzap.mediapicker.R;
-import mobi.zapzap.mediapicker.helpers.ConstantsCustomGallery;
+import mobi.zapzap.mediapicker.adapter.AlbumGridAdapter;
+import mobi.zapzap.mediapicker.callbacks.OnAlbumSelectionListener;
+import mobi.zapzap.mediapicker.helpers.Constants;
 import mobi.zapzap.mediapicker.models.Album;
+import mobi.zapzap.mediapicker.widget.GridMarginDecoration;
 
 import static mobi.zapzap.mediapicker.R.anim.abc_fade_in;
 import static mobi.zapzap.mediapicker.R.anim.abc_fade_out;
@@ -40,7 +38,7 @@ import static mobi.zapzap.mediapicker.R.anim.abc_fade_out;
 /**
  * Created by MyInnos on 03-11-2016.
  */
-public class AlbumSelectActivity extends HelperActivity {
+public class AlbumSelectActivity extends HelperActivity implements OnAlbumSelectionListener {
 
     private ArrayList<Album> albums;
 
@@ -48,11 +46,11 @@ public class AlbumSelectActivity extends HelperActivity {
     private TextView tvProfile;
     private LinearLayout liFinish;
 
-    private ProgressBar loader;
-    private GridView gridView;
-    private CustomAlbumSelectAdapter adapter;
-
     private ActionBar actionBar;
+
+    private RecyclerView gridView;
+    private AlbumGridAdapter albumGridAdapter;
+    private GridLayoutManager gridLayoutManager;
 
     private ContentObserver observer;
     private Handler handler;
@@ -78,8 +76,8 @@ public class AlbumSelectActivity extends HelperActivity {
         if (intent == null) {
             finish();
         }
-        ConstantsCustomGallery.limit = intent.getIntExtra(ConstantsCustomGallery.INTENT_EXTRA_LIMIT, ConstantsCustomGallery.DEFAULT_LIMIT);
-        multiSelectEnabled = intent.getBooleanExtra(ConstantsCustomGallery.INTENT_EXTRA_MULTI_SELECTION, false);
+        Constants.limit = intent.getIntExtra(Constants.INTENT_EXTRA_LIMIT, Constants.DEFAULT_LIMIT);
+        multiSelectEnabled = intent.getBooleanExtra(Constants.INTENT_EXTRA_MULTI_SELECTION, false);
         errorDisplay = (TextView) findViewById(R.id.text_view_error);
         errorDisplay.setVisibility(View.INVISIBLE);
 
@@ -87,25 +85,15 @@ public class AlbumSelectActivity extends HelperActivity {
         tvProfile.setText(R.string.album_view);
         liFinish = (LinearLayout) findViewById(R.id.liFinish);
 
-        loader = (ProgressBar) findViewById(R.id.loader);
-        gridView = (GridView) findViewById(R.id.grid_view_album_select);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (albums.get(position).getName().equals(getString(R.string.capture_photo))) {
-                    //HelperClass.displayMessageOnScreen(getApplicationContext(), "HMM!", false);
-                } else {
+        gridView = (RecyclerView) findViewById(R.id.grid_view_album);
+        gridView.setHasFixedSize(true);
+        gridLayoutManager = new GridLayoutManager(AlbumSelectActivity.this, Constants.ALBUM_GRID_SPAN_COUNT);
 
-                    Intent intent = new Intent(getApplicationContext(), ImageSelectActivity.class);
-                    intent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_ALBUM_NAME, albums.get(position).getName());
-                    intent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_MULTI_SELECTION, multiSelectEnabled);
-                    startActivityForResult(intent, ConstantsCustomGallery.REQUEST_CODE);
-                }
-            }
-        });
         liFinish.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+
                 finish();
                 overridePendingTransition(abc_fade_in, abc_fade_out);
             }
@@ -117,35 +105,35 @@ public class AlbumSelectActivity extends HelperActivity {
 
         super.onStart();
         handler = new Handler() {
+
             @Override
             public void handleMessage(Message msg) {
 
                 switch (msg.what) {
 
-                    case ConstantsCustomGallery.PERMISSION_GRANTED: {
+                    case Constants.PERMISSION_GRANTED: {
                         loadAlbums();
                         break;
                     }
-                    case ConstantsCustomGallery.FETCH_STARTED: {
-                        loader.setVisibility(View.VISIBLE);
+                    case Constants.FETCH_STARTED: {
                         gridView.setVisibility(View.INVISIBLE);
                         break;
                     }
-                    case ConstantsCustomGallery.FETCH_COMPLETED: {
-                        if (adapter == null) {
-                            adapter = new CustomAlbumSelectAdapter(AlbumSelectActivity.this, getApplicationContext(), albums);
-                            gridView.setAdapter(adapter);
+                    case Constants.FETCH_COMPLETED: {
+                        if (albumGridAdapter == null) {
 
-                            loader.setVisibility(View.GONE);
+                            albumGridAdapter = new AlbumGridAdapter(AlbumSelectActivity.this);
+                            albumGridAdapter.addAll(albums);
+                            gridView.setLayoutManager(gridLayoutManager);
+                            gridView.addItemDecoration(new GridMarginDecoration(AlbumSelectActivity.this, 2, 2, 2, 2));
+                            gridView.setAdapter(albumGridAdapter);
                             gridView.setVisibility(View.VISIBLE);
-                            orientationBasedUI(getResources().getConfiguration().orientation);
                         } else {
-                            adapter.notifyDataSetChanged();
+                            albumGridAdapter.notifyDataSetChanged();
                         }
                         break;
                     }
-                    case ConstantsCustomGallery.ERROR: {
-                        loader.setVisibility(View.GONE);
+                    case Constants.ERROR: {
                         errorDisplay.setVisibility(View.VISIBLE);
                         break;
                     }
@@ -187,30 +175,9 @@ public class AlbumSelectActivity extends HelperActivity {
             actionBar.setHomeAsUpIndicator(null);
         }
         albums = null;
-        if (adapter != null) {
-            adapter.releaseResources();
+        if (albumGridAdapter != null) {
+            //adapter.releaseResources();
         }
-        gridView.setOnItemClickListener(null);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-
-        super.onConfigurationChanged(newConfig);
-        orientationBasedUI(newConfig.orientation);
-    }
-
-    private void orientationBasedUI(int orientation) {
-
-        final WindowManager windowManager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        final DisplayMetrics metrics = new DisplayMetrics();
-        windowManager.getDefaultDisplay().getMetrics(metrics);
-        if (adapter != null) {
-
-            int size = orientation == Configuration.ORIENTATION_PORTRAIT ? metrics.widthPixels / 2 : metrics.widthPixels / 4;
-            adapter.setLayoutParams(size);
-        }
-        gridView.setNumColumns(orientation == Configuration.ORIENTATION_PORTRAIT ? 2 : 4);
     }
 
     @Override
@@ -226,7 +193,7 @@ public class AlbumSelectActivity extends HelperActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ConstantsCustomGallery.REQUEST_CODE
+        if (requestCode == Constants.REQUEST_CODE
                 && resultCode == RESULT_OK
                 && data != null) {
             setResult(RESULT_OK, data);
@@ -252,18 +219,32 @@ public class AlbumSelectActivity extends HelperActivity {
         startThread(new AlbumLoaderRunnable());
     }
 
+    @Override
+    public void onClick(@NonNull Album album, @NonNull View view, int position) {
+
+        if (album.getName().equals(getString(R.string.capture_photo))) {
+            //HelperClass.displayMessageOnScreen(getApplicationContext(), "HMM!", false);
+        } else {
+
+            Intent intent = new Intent(getApplicationContext(), ImageSelectActivity.class);
+            intent.putExtra(Constants.INTENT_EXTRA_ALBUM_NAME, album.getName());
+            intent.putExtra(Constants.INTENT_EXTRA_MULTI_SELECTION, multiSelectEnabled);
+            startActivityForResult(intent, Constants.REQUEST_CODE);
+        }
+    }
+
     private final class AlbumLoaderRunnable implements Runnable {
 
         @Override
         public void run() {
 
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-            if (adapter == null) {
-                sendMessage(ConstantsCustomGallery.FETCH_STARTED);
+            if (albumGridAdapter == null) {
+                sendMessage(Constants.FETCH_STARTED);
             }
-            Cursor cursor = getApplicationContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,null, null, MediaStore.Images.Media.DATE_MODIFIED);
+            Cursor cursor = getApplicationContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, MediaStore.Images.Media.DATE_MODIFIED);
             if (cursor == null) {
-                sendMessage(ConstantsCustomGallery.ERROR);
+                sendMessage(Constants.ERROR);
                 return;
             }
             ArrayList<Album> temp = new ArrayList<>(cursor.getCount());
@@ -313,7 +294,7 @@ public class AlbumSelectActivity extends HelperActivity {
                     "https://image.freepik.com/free-vector/flat-white-camera_23-2147490625.jpg"));*/
             albums.addAll(temp);
 
-            sendMessage(ConstantsCustomGallery.FETCH_COMPLETED);
+            sendMessage(Constants.FETCH_COMPLETED);
         }
     }
 
@@ -351,14 +332,13 @@ public class AlbumSelectActivity extends HelperActivity {
     protected void permissionGranted() {
 
         Message message = handler.obtainMessage();
-        message.what = ConstantsCustomGallery.PERMISSION_GRANTED;
+        message.what = Constants.PERMISSION_GRANTED;
         message.sendToTarget();
     }
 
     @Override
     protected void hideViews() {
-
-        loader.setVisibility(View.GONE);
         gridView.setVisibility(View.INVISIBLE);
     }
+
 }

@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,38 +22,27 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import mobi.zapzap.mediapicker.R;
-import mobi.zapzap.mediapicker.Utility;
-import mobi.zapzap.mediapicker.callbacks.OnSelectionListener;
+import mobi.zapzap.mediapicker.callbacks.OnImageSelectionListener;
 import mobi.zapzap.mediapicker.callbacks.SectionIndexer;
-import mobi.zapzap.mediapicker.helpers.HeaderItemDecoration;
+import mobi.zapzap.mediapicker.helpers.Constants;
+import mobi.zapzap.mediapicker.widget.HeaderItemDecoration;
 import mobi.zapzap.mediapicker.models.Image;
 
 /**
  * Created by Wade Morris on 2018/08/27.
  */
-public class MainImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements HeaderItemDecoration.StickyHeaderInterface, SectionIndexer {
+public class ImageGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+        implements HeaderItemDecoration.StickyHeaderInterface, SectionIndexer {
 
-    public static final int HEADER = 1;
-    public static final int ITEM = 2;
-    public static final int SPAN_COUNT = 3;
-    private static final int MARGIN = 2;
-
-    private Context context;
     private ArrayList<Image> list;
-    private OnSelectionListener onSelectionListener;
-    private FrameLayout.LayoutParams layoutParams;
+    private OnImageSelectionListener onSelectionListener;
     private RequestManager glide;
-    private RequestOptions options;
-    private boolean showListView = false;
 
-    public MainImageAdapter(@NonNull Context context) {
+    public ImageGridAdapter(@NonNull Context context, @NonNull OnImageSelectionListener onSelectionListener) {
 
-        this.context = context;
         this.list = new ArrayList<>();
-        int size = Utility.WIDTH / SPAN_COUNT;
-        //layoutParams = new FrameLayout.LayoutParams(size, size);
-        //layoutParams.setMargins(MARGIN, MARGIN - 1, MARGIN, MARGIN - 1);
-        options = new RequestOptions().placeholder(R.color.colorAccent).transform(new CenterCrop()).transform(new FitCenter());
+        this.onSelectionListener = onSelectionListener;
+        RequestOptions options = new RequestOptions().placeholder(R.color.colorAccent).transform(new CenterCrop()).transform(new FitCenter());
         glide = Glide.with(context);
         glide.applyDefaultRequestOptions(options);
     }
@@ -63,14 +51,14 @@ public class MainImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return list;
     }
 
-    public MainImageAdapter addImage(@NonNull Image image) {
+    public ImageGridAdapter addImage(@NonNull Image image) {
 
         list.add(image);
         notifyDataSetChanged();
         return this;
     }
 
-    public void addOnSelectionListener(OnSelectionListener onSelectionListener) {
+    public void addOnSelectionListener(@NonNull OnImageSelectionListener onSelectionListener) {
         this.onSelectionListener = onSelectionListener;
     }
 
@@ -84,7 +72,7 @@ public class MainImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public int getItemViewType(int position) {
 
         Image i = list.get(position);
-        return (i.getContentPath().equalsIgnoreCase("")) ? HEADER : ITEM;
+        return (i.getContentPath().equalsIgnoreCase("")) ? Constants.VIEW_TYPE_HEADER : Constants.VIEW_TYPE_ITEM;
     }
 
     public void clearList() {
@@ -97,26 +85,28 @@ public class MainImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         notifyItemChanged(pos);
     }
 
-    public void showListView(boolean showListView) {
-        this.showListView = showListView;
-    }
-
     public void sortList(boolean assending) {
 
         if (assending) {
 
             Collections.sort(list, new Comparator<Image>() {
+
                 @Override
                 public int compare(Image a, Image b) {
-                    return (a.getTimestamp() < b.getTimestamp()) ? -1 : ((a.getTimestamp() == b.getTimestamp()) ? 0 : 1);
+
+                    return (a.getTimestamp() < b.getTimestamp()) ? -1 : (
+                            (a.getTimestamp() == b.getTimestamp()) ? 0 : 1);
                 }
             });
         } else {
 
             Collections.sort(list, new Comparator<Image>() {
+
                 @Override
                 public int compare(Image a, Image b) {
-                    return (b.getTimestamp() < a.getTimestamp()) ? -1 : ((b.getTimestamp() == a.getTimestamp()) ? 0 : 1);
+
+                    return (b.getTimestamp() < a.getTimestamp()) ? -1 : (
+                            (b.getTimestamp() == a.getTimestamp()) ? 0 : 1);
                 }
             });
         }
@@ -125,6 +115,7 @@ public class MainImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public long getItemId(int position) {
+
         return list.get(position).getContentPath().hashCode();
     }
 
@@ -132,17 +123,10 @@ public class MainImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        if (viewType == HEADER) {
+        if (viewType == Constants.VIEW_TYPE_HEADER) {
             return new HeaderHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.header_row, parent, false));
         } else {
-
-            View view;
-            if (showListView) {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_view_item_image, parent, false);
-            } else {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_view_item_image, parent, false);
-            }
-            return new Holder(view);
+            return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_view_item_image, parent, false));
         }
     }
 
@@ -188,7 +172,7 @@ public class MainImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public void bindHeaderData(View header, int headerPosition) {
+    public void bindHeaderData(@NonNull View header, int headerPosition) {
 
         Image image = list.get(headerPosition);
         ((TextView) header.findViewById(R.id.txt_header)).setText(image.getHeaderDate());
@@ -202,12 +186,6 @@ public class MainImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public String getSectionText(int position) {
         return list.get(position).getHeaderDate();
-    }
-
-    public String getSectionMonthYearText(int position) {
-        // TODO: 2018/08/27 a
-        return "";
-        //return list.get(position).getScrollerDate();
     }
 
     public class Holder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {

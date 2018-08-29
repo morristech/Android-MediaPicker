@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="118dp"
-             android:layout_height="118dp"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:paddingBottom="1dp"
-             android:paddingEnd="1dp"
-             android:paddingStart="1dp"
-             android:paddingTop="1dp">
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/image_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:minWidth="118dp"
+    android:minHeight="118dp">
 
-    <ImageView
+    <mobi.zapzap.mediapicker.widget.SquareImageView
         android:id="@+id/img_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name"
         android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars"/>
 
-    <ImageView
+    <mobi.zapzap.mediapicker.widget.SquareImageView
         android:id="@+id/img_alpha"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,7 +31,11 @@
         android:contentDescription="@string/app_name"
         android:scaleType="center"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/img_thumbnail"
+        app:layout_constraintEnd_toEndOf="@+id/img_thumbnail"
+        app:layout_constraintStart_toStartOf="@+id/img_thumbnail"
+        app:layout_constraintTop_toTopOf="@+id/img_thumbnail"
         app:srcCompat="@drawable/ic_selected"
-        tools:visibility="visible" />
+        tools:visibility="visible"/>
 
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <public name="menu_image_preview_delete" type="id"/>
+    <public name="menu_image_select_sort"  type="id"/>
+    <public name="menu_image_list_view"  type="id"/>
+    <public name="menu_image_hide_sdcard"  type="id"/>
+</resources>

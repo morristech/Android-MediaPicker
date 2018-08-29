@@ -3,6 +3,7 @@ package mobi.zapzap.mediapicker.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,8 @@ import java.util.ArrayList;
 
 import mobi.zapzap.mediapicker.R;
 import mobi.zapzap.mediapicker.Utility;
-import mobi.zapzap.mediapicker.callbacks.OnSelectionListener;
+import mobi.zapzap.mediapicker.callbacks.OnImageSelectionListener;
+import mobi.zapzap.mediapicker.helpers.Constants;
 import mobi.zapzap.mediapicker.models.Image;
 
 /**
@@ -29,7 +31,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private Context context;
     private ArrayList<Image> images;
-    private OnSelectionListener onSelectionListener;
+    private OnImageSelectionListener onSelectionListener;
     private RequestManager glide;
     private RequestOptions options;
 
@@ -37,12 +39,12 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         this.context = context;
         this.images = new ArrayList<>();
-        options = new RequestOptions().override(256).transform(new CenterCrop()).transform(new FitCenter());
+        options = new RequestOptions().transform(new CenterCrop()).transform(new FitCenter());
         glide = Glide.with(context);
         glide.applyDefaultRequestOptions(options);
     }
 
-    public void addOnSelectionListener(OnSelectionListener onSelectionListener) {
+    public void addOnSelectionListener(OnImageSelectionListener onSelectionListener) {
         this.onSelectionListener = onSelectionListener;
     }
 
@@ -80,7 +82,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        if (viewType == MainImageAdapter.HEADER) {
+        if (viewType == Constants.VIEW_TYPE_HEADER) {
             View view = LayoutInflater.from(parent.getContext()). inflate(R.layout.preview_item_image, parent, false);
             return new HolderNone(view);
         } else {
@@ -91,9 +93,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-
-        Image image = images.get(position);
-        return (image.getContentPath().isEmpty()) ? MainImageAdapter.HEADER : MainImageAdapter.ITEM;
+        return (TextUtils.isEmpty(images.get(position).getContentPath())) ? Constants.VIEW_TYPE_HEADER : Constants.VIEW_TYPE_ITEM;
     }
 
     @Override
@@ -112,8 +112,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             imageHolder.selection.setPadding(padding, padding, padding, padding);
             imageHolder.preview.setLayoutParams(layoutParams);
 
-            glide.load(image.getContentPath()).apply(options).into(imageHolder.preview);
-
+            glide.load(image.getContentPath()).into(imageHolder.preview);
             imageHolder.selection.setVisibility(image.isSelected() ? View.GONE : View.VISIBLE);
         } else {
 
