@@ -35,10 +35,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static mobi.zapzap.mediapicker.helpers.Constants.ORDERBY;
-import static mobi.zapzap.mediapicker.helpers.Constants.PROJECTION;
-import static mobi.zapzap.mediapicker.helpers.Constants.URI;
-import static mobi.zapzap.mediapicker.helpers.Constants.sScrollbarAnimDuration;
+import static mobi.zapzap.mediapicker.Constants.ORDERBY;
+import static mobi.zapzap.mediapicker.Constants.PROJECTION;
+import static mobi.zapzap.mediapicker.Constants.URI;
+import static mobi.zapzap.mediapicker.Constants.sScrollbarAnimDuration;
 
 /**
  * Created by Wade Morris on 2018/08/27.

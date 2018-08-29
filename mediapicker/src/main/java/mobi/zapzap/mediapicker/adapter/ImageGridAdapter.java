@@ -24,7 +24,7 @@ import java.util.Comparator;
 import mobi.zapzap.mediapicker.R;
 import mobi.zapzap.mediapicker.callbacks.OnImageSelectionListener;
 import mobi.zapzap.mediapicker.callbacks.SectionIndexer;
-import mobi.zapzap.mediapicker.helpers.Constants;
+import mobi.zapzap.mediapicker.Constants;
 import mobi.zapzap.mediapicker.widget.HeaderItemDecoration;
 import mobi.zapzap.mediapicker.models.Image;
 

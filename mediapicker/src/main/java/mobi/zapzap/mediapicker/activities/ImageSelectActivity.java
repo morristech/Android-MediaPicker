@@ -29,7 +29,7 @@ import mobi.zapzap.mediapicker.R;
 import mobi.zapzap.mediapicker.Utility;
 import mobi.zapzap.mediapicker.adapter.ImageGridAdapter;
 import mobi.zapzap.mediapicker.callbacks.OnImageSelectionListener;
-import mobi.zapzap.mediapicker.helpers.Constants;
+import mobi.zapzap.mediapicker.Constants;
 import mobi.zapzap.mediapicker.models.Image;
 import mobi.zapzap.mediapicker.widget.GridMarginDecoration;
 import mobi.zapzap.mediapicker.widget.HeaderItemDecoration;
@@ -38,7 +38,7 @@ import static mobi.zapzap.mediapicker.R.anim.abc_fade_in;
 import static mobi.zapzap.mediapicker.R.anim.abc_fade_out;
 
 /**
- * Created by MyInnos on 03-11-2016.
+ * Created by Zapper Development on 03-11-2016.
  */
 public class ImageSelectActivity extends HelperActivity {
 

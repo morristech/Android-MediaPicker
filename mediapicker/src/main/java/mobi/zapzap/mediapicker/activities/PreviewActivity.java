@@ -26,7 +26,7 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 import mobi.zapzap.mediapicker.R;
 import mobi.zapzap.mediapicker.adapter.ImagePreviewAdapter;
 import mobi.zapzap.mediapicker.callbacks.OnImageSelectionListener;
-import mobi.zapzap.mediapicker.helpers.Constants;
+import mobi.zapzap.mediapicker.Constants;
 import mobi.zapzap.mediapicker.models.Image;
 
 import static mobi.zapzap.mediapicker.R.anim.abc_fade_in;

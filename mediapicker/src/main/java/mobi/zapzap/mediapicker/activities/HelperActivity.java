@@ -13,7 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import mobi.zapzap.mediapicker.R;
-import mobi.zapzap.mediapicker.helpers.Constants;
+import mobi.zapzap.mediapicker.Constants;
 
 
 public class HelperActivity extends AppCompatActivity {

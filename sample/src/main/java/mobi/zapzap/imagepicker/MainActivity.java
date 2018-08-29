@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import mobi.zapzap.mediapicker.activities.AlbumSelectActivity;
-import mobi.zapzap.mediapicker.helpers.Constants;
+import mobi.zapzap.mediapicker.Constants;
 import mobi.zapzap.mediapicker.models.Image;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,14 +33,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         txImageSelects = (TextView) findViewById(R.id.txImageSelects);
         imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (!Helper.checkPermissionForExternalStorage(MainActivity.this)) {
                         Helper.requestStoragePermission(MainActivity.this, READ_STORAGE_PERMISSION);
@@ -50,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtra(Constants.INTENT_EXTRA_LIMIT, LIMIT);
                         startActivityForResult(intent, Constants.REQUEST_CODE);
                     }
-                }else{
+                } else {
                     Intent intent = new Intent(MainActivity.this, AlbumSelectActivity.class);
                     intent.putExtra(Constants.INTENT_EXTRA_LIMIT, LIMIT);
                     startActivityForResult(intent, Constants.REQUEST_CODE);
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == Constants.REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {

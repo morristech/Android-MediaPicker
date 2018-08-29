@@ -28,7 +28,7 @@ import java.util.Locale;
 import mobi.zapzap.mediapicker.R;
 import mobi.zapzap.mediapicker.adapter.AlbumGridAdapter;
 import mobi.zapzap.mediapicker.callbacks.OnAlbumSelectionListener;
-import mobi.zapzap.mediapicker.helpers.Constants;
+import mobi.zapzap.mediapicker.Constants;
 import mobi.zapzap.mediapicker.models.Album;
 import mobi.zapzap.mediapicker.widget.GridMarginDecoration;
 
@@ -36,7 +36,7 @@ import static mobi.zapzap.mediapicker.R.anim.abc_fade_in;
 import static mobi.zapzap.mediapicker.R.anim.abc_fade_out;
 
 /**
- * Created by MyInnos on 03-11-2016.
+ * Created by Zapper Development on 03-11-2016.
  */
 public class AlbumSelectActivity extends HelperActivity implements OnAlbumSelectionListener {
 

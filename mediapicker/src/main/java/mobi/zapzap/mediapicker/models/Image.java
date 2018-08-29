@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by MyInnos on 03-11-2016.
+ * Created by Zapper Development on 03-11-2016.
  */
 public class Image implements Parcelable {
 

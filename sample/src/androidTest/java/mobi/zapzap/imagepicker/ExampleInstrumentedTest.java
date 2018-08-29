@@ -20,7 +20,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() throws Exception {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
-
-        assertEquals("in.myinnos.imagepicker", appContext.getPackageName());
+        assertEquals("mobi.zapzap.imagepicker", appContext.getPackageName());
     }
 }

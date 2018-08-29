@@ -7,7 +7,7 @@ import android.os.Build;
 import android.support.v4.content.ContextCompat;
 
 /**
- * Created by MyInnos on 06-03-2017.
+ * Created by Zapper Development on 06-03-2017.
  */
 
 public class Helper {

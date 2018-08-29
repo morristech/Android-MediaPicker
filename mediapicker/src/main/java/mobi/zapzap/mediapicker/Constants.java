@@ -1,12 +1,12 @@
-package mobi.zapzap.mediapicker.helpers;
+package mobi.zapzap.mediapicker;
 
 import android.net.Uri;
 import android.provider.MediaStore;
 
 /**
- * Created by MyInnos on 03-11-2016.
+ * Created by Zapper Development on 03-11-2016.
  */
-public class Constants {
+public final class Constants {
 
     public static final int PERMISSION_REQUEST_CODE = 1000;
     public static final int PERMISSION_GRANTED = 1001;
