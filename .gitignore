@@ -1,6 +1,14 @@
 *.iml
 .gradle
 /local.properties
+.idea/caches/
+.idea/checkstyle-idea.xml
+.idea/codeStyles/Project.xml
+.idea/findbugs-idea.xml
+.idea/google-java-format.xml
+.idea/inspectionProfiles/
+.idea/kotlinc.xml
+.idea/r2murlcache.xml
 /.idea/workspace.xml
 /.idea/libraries
 .DS_Store
