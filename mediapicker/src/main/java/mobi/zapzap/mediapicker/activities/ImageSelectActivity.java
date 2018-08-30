@@ -25,11 +25,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 
+import mobi.zapzap.mediapicker.Constants;
 import mobi.zapzap.mediapicker.R;
-import mobi.zapzap.mediapicker.Utility;
+import mobi.zapzap.mediapicker.MediaPickerUtil;
 import mobi.zapzap.mediapicker.adapter.ImageGridAdapter;
 import mobi.zapzap.mediapicker.callbacks.OnImageSelectionListener;
-import mobi.zapzap.mediapicker.Constants;
 import mobi.zapzap.mediapicker.models.Image;
 import mobi.zapzap.mediapicker.widget.GridMarginDecoration;
 import mobi.zapzap.mediapicker.widget.HeaderItemDecoration;
@@ -40,7 +40,7 @@ import static mobi.zapzap.mediapicker.R.anim.abc_fade_out;
 /**
  * Created by Zapper Development on 03-11-2016.
  */
-public class ImageSelectActivity extends HelperActivity {
+public class ImageSelectActivity extends MediaPickerActivity {
 
     private ArrayList<Image> images;
     private String albumName;
@@ -195,8 +195,8 @@ public class ImageSelectActivity extends HelperActivity {
                          */
                         if (adapter == null) {
 
-                            adapter = new ImageGridAdapter(ImageSelectActivity.this, onSelectionListener);
-                            adapter.addImageList(images);
+                            adapter = new ImageGridAdapter(images);
+                            adapter.addOnSelectionListener(onSelectionListener);
                             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
 
                                 @Override
@@ -424,7 +424,7 @@ public class ImageSelectActivity extends HelperActivity {
                         }
                         calendar = Calendar.getInstance();
                         calendar.setTimeInMillis(capturedTimestamp);
-                        String dateDifference = Utility.getDateDifference(ImageSelectActivity.this, calendar);
+                        String dateDifference = MediaPickerUtil.getDateDifference(ImageSelectActivity.this, calendar);
                         if (!header.equalsIgnoreCase("" + dateDifference)) {
                             header = "" + dateDifference;
                             temp.add(new Image(-1, "", dateDifference, "", "", "", capturedTimestamp, isSelected));

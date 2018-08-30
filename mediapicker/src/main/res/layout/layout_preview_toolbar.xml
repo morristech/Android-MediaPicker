@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.AppBarLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/zz_action_bar_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
-    android:background="@color/transparent"
     android:clipToPadding="false"
-    app:elevation="4dp"
+    app:elevation="6dp"
     tools:showIn="@layout/layout_preview_toolbar">
 
     <android.support.v7.widget.Toolbar
@@ -42,7 +42,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/emoji_00a9"
                 android:visibility="gone"
-                tools:visibility="visible" />
+                tools:visibility="visible"/>
 
             <ImageButton
                 android:id="@+id/btn_remove_media"
@@ -58,11 +58,11 @@
                 android:scaleType="center"
                 android:visibility="gone"
                 app:srcCompat="@drawable/ic_bin"
-                tools:visibility="visible" />
+                tools:visibility="visible"/>
 
             <include
                 android:id="@+id/media_details"
-                layout="@layout/layout_toolbar_preview_info" />
+                layout="@layout/layout_toolbar_preview_info"/>
 
         </RelativeLayout>
 

@@ -27,7 +27,7 @@
         android:id="@+id/img_alpha"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent_60_alpha"
+        android:background="@color/zz_media_picker_transparent_60_alpha"
         android:contentDescription="@string/app_name"
         android:scaleType="center"
         android:visibility="gone"

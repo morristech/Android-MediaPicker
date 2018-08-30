@@ -23,10 +23,10 @@ import java.io.File;
 import java.util.ArrayList;
 
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
+import mobi.zapzap.mediapicker.Constants;
 import mobi.zapzap.mediapicker.R;
 import mobi.zapzap.mediapicker.adapter.ImagePreviewAdapter;
 import mobi.zapzap.mediapicker.callbacks.OnImageSelectionListener;
-import mobi.zapzap.mediapicker.Constants;
 import mobi.zapzap.mediapicker.models.Image;
 
 import static mobi.zapzap.mediapicker.R.anim.abc_fade_in;
@@ -36,8 +36,7 @@ public class PreviewActivity extends AppCompatActivity {
 
     private static final String TAG = "PreviewActivity";
 
-    private ArrayList<Uri> imageUris;
-    private ArrayList<Image> selectedImages;
+    private ArrayList<Image> images;
     private ImagePreviewAdapter imageAdapter;
     private RecyclerView imageRecyclerView;
     private PhotoView imgPreview;
@@ -68,6 +67,7 @@ public class PreviewActivity extends AppCompatActivity {
 
         @Override
         public void onLongClick(@NonNull Image img, @NonNull View view, int position) {
+            //Do nothing..
         }
 
     };
@@ -96,8 +96,26 @@ public class PreviewActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        // TODO: 2018/08/28 Remove the currently selected image from the list and update ui accordingly.
-        return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+
+            onBackPressed();
+            return true;
+        } else if (item.getItemId() == R.id.menu_preview_delete) {
+
+            if (currentImage != null) {
+
+                if (images != null) {
+                    images.remove(currentImage);
+                }
+                if (imageAdapter != null) {
+                    imageAdapter.remove(currentImage);
+                }
+                return true;
+            }
+            return false;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -108,19 +126,18 @@ public class PreviewActivity extends AppCompatActivity {
         if (getIntent() != null) {
 
             if (getIntent().hasExtra(Constants.INTENT_EXTRA_LIST_IMAGES)) {
-                selectedImages = getIntent().getParcelableArrayListExtra(Constants.INTENT_EXTRA_LIST_IMAGES);
+                this.images = getIntent().getParcelableArrayListExtra(Constants.INTENT_EXTRA_LIST_IMAGES);
             } else if (getIntent().hasExtra(Constants.INTENT_EXTRA_IMAGE)){
 
-                selectedImages = new ArrayList<Image>();
+                this.images = new ArrayList<Image>();
                 Image image = getIntent().getParcelableExtra(Constants.INTENT_EXTRA_IMAGE);
                 if (image != null) {
-                    selectedImages.add(image);
+                    images.add(image);
                 }
             }
         }
-        if (selectedImages != null && !selectedImages.isEmpty()) {
+        if (images != null && !images.isEmpty()) {
 
-            imageUris = new ArrayList<Uri>();
             imageRecyclerView = (RecyclerView) findViewById(R.id.rv_selected_items);
             imgPreview = (PhotoView) findViewById(R.id.img_preview);
             edtCaption = (EmojiconEditText) findViewById(R.id.edt_caption);
@@ -142,21 +159,20 @@ public class PreviewActivity extends AppCompatActivity {
                     sendIntent();
                 }
             });
-            if (selectedImages.size() > 1) {
+            if (images.size() > 1) {
 
                 imageRecyclerView.setVisibility(View.VISIBLE);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
                 linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
                 imageRecyclerView.setLayoutManager(linearLayoutManager);
-                imageAdapter = new ImagePreviewAdapter(PreviewActivity.this);
-                imageAdapter.addImageList(selectedImages);
+                imageAdapter = new ImagePreviewAdapter(images);
                 imageAdapter.addOnSelectionListener(onSelectionListener);
                 imageRecyclerView.setAdapter(imageAdapter);
             } else {
 
                 imageRecyclerView.setVisibility(View.GONE);
             }
-            Image firstImage = selectedImages.get(0);
+            Image firstImage = images.get(0);
             if (firstImage != null) {
 
                 Uri uri = Uri.fromFile(new File(firstImage.getPath()));
@@ -190,7 +206,7 @@ public class PreviewActivity extends AppCompatActivity {
     private void sendIntent() {
 
         Intent intent = new Intent();
-        intent.putParcelableArrayListExtra(Constants.INTENT_EXTRA_LIST_IMAGES, selectedImages);
+        intent.putParcelableArrayListExtra(Constants.INTENT_EXTRA_LIST_IMAGES, images);
         setResult(RESULT_OK, intent);
         finish();
         overridePendingTransition(abc_fade_in, abc_fade_out);

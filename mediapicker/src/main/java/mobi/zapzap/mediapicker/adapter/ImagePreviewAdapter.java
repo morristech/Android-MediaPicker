@@ -1,6 +1,5 @@
 package mobi.zapzap.mediapicker.adapter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -10,16 +9,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
+import mobi.zapzap.mediapicker.Constants;
 import mobi.zapzap.mediapicker.R;
 import mobi.zapzap.mediapicker.callbacks.OnImageSelectionListener;
-import mobi.zapzap.mediapicker.Constants;
 import mobi.zapzap.mediapicker.models.Image;
 
 /**
@@ -27,65 +25,59 @@ import mobi.zapzap.mediapicker.models.Image;
  */
 public class ImagePreviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context context;
     private ArrayList<Image> images;
     private OnImageSelectionListener onSelectionListener;
-    private RequestManager glide;
-    private RequestOptions options;
 
-    public ImagePreviewAdapter(@NonNull Context context) {
-
-        this.context = context;
-        this.images = new ArrayList<>();
-        options = new RequestOptions().transform(new CenterCrop()).transform(new FitCenter());
-        glide = Glide.with(context);
-        glide.applyDefaultRequestOptions(options);
+    public ImagePreviewAdapter(@NonNull ArrayList<Image> images) {
+        this.images = images;
     }
 
-    public void addOnSelectionListener(OnImageSelectionListener onSelectionListener) {
+    public void addOnSelectionListener(@NonNull OnImageSelectionListener onSelectionListener) {
         this.onSelectionListener = onSelectionListener;
     }
 
-    public ImagePreviewAdapter addImage(@NonNull Image image) {
+    private void add(@NonNull Image item) {
 
-        images.add(image);
-        notifyDataSetChanged();
-        return this;
-    }
-
-    public ArrayList<Image> getItemList() {
-        return images;
+        images.add(item);
+        notifyItemInserted(images.size() - 1);
     }
 
     public void addImageList(@NonNull ArrayList<Image> images) {
 
-        this.images.addAll(images);
-        notifyDataSetChanged();
-    }
-
-    public void clearList() {
-        images.clear();
-    }
-
-    public void select(boolean selection, int pos) {
-
-        if (pos < 100) {
-
-            images.get(pos).setSelected(selection);
-            notifyItemChanged(pos);
+        for (Image image : images) {
+            add(image);
         }
+    }
+
+    public void remove(@NonNull Image item) {
+
+        int position = images.indexOf(item);
+        if (position > -1) {
+            images.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    public void clear() {
+
+        while (getItemCount() > 0) {
+            remove(getImage(0));
+        }
+    }
+
+    public Image getImage(int position){
+        return images.get(position);
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.preview_item_image, parent, false);
         if (viewType == Constants.VIEW_TYPE_HEADER) {
-            View view = LayoutInflater.from(parent.getContext()). inflate(R.layout.preview_item_image, parent, false);
-            return new HolderNone(view);
+            return new EmptyViewHolder(view);
         } else {
-            View view = LayoutInflater.from(parent.getContext()). inflate(R.layout.preview_item_image, parent, false);
-            return new Holder(view);
+            return new ImageViewHolder(view);
         }
     }
 
@@ -97,16 +89,19 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        Image image = images.get(position);
-        if (holder instanceof Holder) {
+        Image image = getImage(position);
+        if (image != null) {
 
-            Holder imageHolder = (Holder) holder;
-            glide.load(image.getContentPath()).into(imageHolder.preview);
-            imageHolder.selection.setVisibility(image.isSelected() ? View.GONE : View.VISIBLE);
-        } else {
+            if (holder instanceof ImageViewHolder) {
 
-            HolderNone noneHolder = (HolderNone) holder;
-            noneHolder.itemView.setVisibility(View.GONE);
+                ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
+                RequestOptions options = new RequestOptions().placeholder(R.color.zz_media_picker_default_placeholder).transform(new CenterCrop()).transform(new FitCenter());
+                Glide.with(imageViewHolder.itemView).load(image.getContentPath()).apply(options).into(imageViewHolder.preview);
+            } else {
+
+                EmptyViewHolder noneHolder = (EmptyViewHolder) holder;
+                noneHolder.itemView.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -115,38 +110,42 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return images != null ? images.size() : 0;
     }
 
-    public class Holder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public class ImageViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, View.OnFocusChangeListener {
 
         ImageView preview;
-        ImageView selection;
+        View selection;
 
-        Holder(View itemView) {
+        ImageViewHolder(@NonNull View itemView) {
 
             super(itemView);
             preview = itemView.findViewById(R.id.img_thumbnail);
-            selection = itemView.findViewById(R.id.img_selection);
+            selection = itemView.findViewById(R.id.selection_alpha);
             itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
+            itemView.setOnFocusChangeListener(this);
         }
 
         @Override
         public void onClick(View view) {
 
             int id = this.getLayoutPosition();
-            onSelectionListener.onClick(images.get(id), view, id);
+            if (onSelectionListener != null) {
+                onSelectionListener.onClick(images.get(id), view, id);
+            }
         }
 
         @Override
-        public boolean onLongClick(View view) {
+        public void onFocusChange(View view, boolean hasFocus) {
 
-            int id = this.getLayoutPosition();
-            onSelectionListener.onLongClick(images.get(id), view, id);
-            return true;
+            if (selection != null) {
+                selection.setVisibility(hasFocus ? View.GONE : View.VISIBLE);
+            }
         }
+
     }
 
-    public static class HolderNone extends RecyclerView.ViewHolder {
-        HolderNone(View itemView) {
+    public static class EmptyViewHolder extends RecyclerView.ViewHolder {
+        EmptyViewHolder(View itemView) {
             super(itemView);
         }
     }

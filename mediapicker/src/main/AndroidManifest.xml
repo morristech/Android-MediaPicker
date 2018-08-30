@@ -12,17 +12,21 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true">
+
         <activity
             android:name="mobi.zapzap.mediapicker.activities.AlbumSelectActivity"
             android:hardwareAccelerated="true"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"/>
         <activity
             android:name="mobi.zapzap.mediapicker.activities.ImageSelectActivity"
             android:hardwareAccelerated="true"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"/>
         <activity
             android:name="mobi.zapzap.mediapicker.activities.PreviewActivity"
             android:hardwareAccelerated="true"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"/>
 
         <meta-data

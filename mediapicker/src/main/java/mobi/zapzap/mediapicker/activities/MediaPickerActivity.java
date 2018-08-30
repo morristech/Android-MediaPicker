@@ -12,15 +12,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import mobi.zapzap.mediapicker.R;
 import mobi.zapzap.mediapicker.Constants;
+import mobi.zapzap.mediapicker.R;
 
-
-public class HelperActivity extends AppCompatActivity {
+public class MediaPickerActivity extends AppCompatActivity {
 
     protected View view;
 
-    private final int maxLines = 4;
     private final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     protected void checkPermission() {
@@ -53,7 +51,7 @@ public class HelperActivity extends AppCompatActivity {
                     public void onClick(View v) {
 
                         ActivityCompat.requestPermissions(
-                                HelperActivity.this,
+                                MediaPickerActivity.this,
                                 permissions,
                                 Constants.PERMISSION_REQUEST_CODE);
                     }
@@ -77,7 +75,7 @@ public class HelperActivity extends AppCompatActivity {
 
                         Uri uri = Uri.fromParts(
                                 getString(R.string.permission_package),
-                                HelperActivity.this.getPackageName(),
+                                MediaPickerActivity.this.getPackageName(),
                                 null);
 
                         Intent intent = new Intent();
@@ -108,7 +106,6 @@ public class HelperActivity extends AppCompatActivity {
     }
 
     protected void permissionGranted() {
-
     }
 
     private void permissionDenied() {
@@ -118,11 +115,9 @@ public class HelperActivity extends AppCompatActivity {
     }
 
     protected void hideViews() {
-
     }
 
-    protected void setView(View view) {
-
+    protected void setView(@NonNull View view) {
         this.view = view;
     }
 

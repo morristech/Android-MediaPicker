@@ -27,7 +27,7 @@
         android:id="@+id/media_bucket_info_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/transparent_50_alpha"
+        android:background="@color/zz_media_picker_transparent_50_alpha"
         android:clipToPadding="false"
         android:minHeight="45dp"
         android:orientation="vertical"

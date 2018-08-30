@@ -25,10 +25,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 
+import mobi.zapzap.mediapicker.Constants;
 import mobi.zapzap.mediapicker.R;
 import mobi.zapzap.mediapicker.adapter.AlbumGridAdapter;
 import mobi.zapzap.mediapicker.callbacks.OnAlbumSelectionListener;
-import mobi.zapzap.mediapicker.Constants;
 import mobi.zapzap.mediapicker.models.Album;
 import mobi.zapzap.mediapicker.widget.GridMarginDecoration;
 
@@ -38,7 +38,7 @@ import static mobi.zapzap.mediapicker.R.anim.abc_fade_out;
 /**
  * Created by Zapper Development on 03-11-2016.
  */
-public class AlbumSelectActivity extends HelperActivity implements OnAlbumSelectionListener {
+public class AlbumSelectActivity extends MediaPickerActivity implements OnAlbumSelectionListener {
 
     private ArrayList<Album> albums;
 

@@ -13,6 +13,7 @@ public final class Constants {
     public static final int PERMISSION_DENIED = 1002;
 
     public static final int REQUEST_CODE = 2000;
+    public static final int ADD_REQUEST_CODE = 3000;
     public static final int IMAGE_SELECTION_MODE_SINGLE = 80807;
     public static final int IMAGE_SELECTION_MODE_MULTIPLE = 80808;
 

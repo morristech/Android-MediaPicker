@@ -1,6 +1,5 @@
 package mobi.zapzap.mediapicker;
 
-
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -16,6 +15,7 @@ import android.os.Environment;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.media.ExifInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -43,7 +43,7 @@ import static mobi.zapzap.mediapicker.Constants.sScrollbarAnimDuration;
 /**
  * Created by Wade Morris on 2018/08/27.
  */
-public class Utility {
+public final class MediaPickerUtil {
 
     public static int HEIGHT;
     public static int WIDTH;
@@ -51,7 +51,8 @@ public class Utility {
     private String pathDir;
     private static final String GIF_PATTERN = "(.+?)\\.gif$";
 
-    public static void setupStatusBarHidden(AppCompatActivity appCompatActivity) {
+    public static void setupStatusBarHidden(@NonNull AppCompatActivity appCompatActivity) {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window w = appCompatActivity.getWindow();
             w.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -59,18 +60,19 @@ public class Utility {
         }
     }
 
-    public static void showStatusBar(AppCompatActivity appCompatActivity) {
+    public static void showStatusBar(@NonNull AppCompatActivity appCompatActivity) {
+
         synchronized (appCompatActivity) {
             Window w = appCompatActivity.getWindow();
             View decorView = w.getDecorView();
             // Show Status Bar.
             int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
             decorView.setSystemUiVisibility(uiOptions);
-
         }
     }
 
-    public static void hideStatusBar(AppCompatActivity appCompatActivity) {
+    public static void hideStatusBar(@NonNull AppCompatActivity appCompatActivity) {
+
         synchronized (appCompatActivity) {
             Window w = appCompatActivity.getWindow();
             View decorView = w.getDecorView();
@@ -80,42 +82,48 @@ public class Utility {
         }
     }
 
-    public static int getSoftButtonsBarSizePort(Activity activity) {
+    public static int getSoftButtonsBarSizePort(@NonNull Activity activity) {
         // getRealMetrics is only available with API 17 and +
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+
             DisplayMetrics metrics = new DisplayMetrics();
             activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
             int usableHeight = metrics.heightPixels;
             activity.getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
             int realHeight = metrics.heightPixels;
-            if (realHeight > usableHeight)
+            if (realHeight > usableHeight) {
                 return realHeight - usableHeight;
-            else
+            } else {
                 return 0;
+            }
         }
         return 0;
     }
 
-    public static void getScreenSize(Activity activity) {
+    public static void getScreenSize(@NonNull Activity activity) {
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         HEIGHT = displayMetrics.heightPixels;
         WIDTH = displayMetrics.widthPixels;
     }
 
-    public static float convertDpToPixel(float dp, Context context) {
+    public static float convertDpToPixel(float dp, @NonNull Context context) {
+
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         return dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
-    public static float convertPixelsToDp(float px, Context context) {
+    public static float convertPixelsToDp(float px, @NonNull Context context) {
+
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         return px / ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
-    public static String getDateDifference(Context context, Calendar calendar) {
+    public static String getDateDifference(@NonNull Context context, @NonNull Calendar calendar) {
+
         Date d = calendar.getTime();
         Calendar lastMonth = Calendar.getInstance();
         Calendar lastWeek = Calendar.getInstance();
@@ -124,7 +132,7 @@ public class Utility {
         lastWeek.add(Calendar.DAY_OF_MONTH, -7);
         recent.add(Calendar.DAY_OF_MONTH, -2);
         if (calendar.before(lastMonth)) {
-            return new SimpleDateFormat("MMMM").format(d);
+            return new SimpleDateFormat("MMMM", Locale.getDefault()).format(d);
         } else if (calendar.after(lastMonth) && calendar.before(lastWeek)) {
             return context.getResources().getString(R.string.media_picker_last_month);
         } else if (calendar.after(lastWeek) && calendar.before(recent)) {
@@ -134,39 +142,39 @@ public class Utility {
         }
     }
 
-    public static boolean isNull(View topChild) {
+    public static boolean isNull(@Nullable View topChild) {
         return topChild == null;
     }
 
-    public static Cursor getCursor(Context context) {
-        return context.getContentResolver().query(URI, PROJECTION,
-                null, null, ORDERBY);
+    public static Cursor getCursor(@NonNull Context context) {
+        return context.getContentResolver().query(URI, PROJECTION, null, null, ORDERBY);
     }
 
-    public static boolean isViewVisible(View view) {
+    public static boolean isViewVisible(@Nullable View view) {
         return view != null && view.getVisibility() == View.VISIBLE;
     }
 
-    public static ViewPropertyAnimator showScrollbar(View mScrollbar, Context context) {
+    public static ViewPropertyAnimator showScrollbar(View scrollbar, @NonNull Context context) {
+
         float transX = context.getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_padding_end);
-        mScrollbar.setTranslationX(transX);
-        mScrollbar.setVisibility(View.VISIBLE);
-        return mScrollbar.animate().translationX(0f).alpha(1f)
+        scrollbar.setTranslationX(transX);
+        scrollbar.setVisibility(View.VISIBLE);
+        return scrollbar.animate().translationX(0f).alpha(1f)
                 .setDuration(sScrollbarAnimDuration)
                 .setListener(new AnimatorListenerAdapter() {
                     // adapter required for new alpha value to stick
                 });
     }
 
-    public static void cancelAnimation(ViewPropertyAnimator animator) {
+    public static void cancelAnimation(@NonNull ViewPropertyAnimator animator) {
+
         if (animator != null) {
             animator.cancel();
         }
     }
 
-    public static void manipulateVisibility(AppCompatActivity activity, float slideOffset,
-                                            RecyclerView instantRecyclerView, RecyclerView recyclerView,
-                                            View status_bar_bg, View topbar, View clickme, View sendButton, boolean longSelection) {
+    public static void manipulateVisibility(AppCompatActivity activity, float slideOffset, RecyclerView instantRecyclerView, RecyclerView recyclerView, View status_bar_bg, View topbar, View clickme, View sendButton, boolean longSelection) {
+
         instantRecyclerView.setAlpha(1 - slideOffset);
         clickme.setAlpha(1 - slideOffset);
         if (longSelection) {
@@ -178,6 +186,7 @@ public class Utility {
             instantRecyclerView.setVisibility(View.GONE);
             clickme.setVisibility(View.GONE);
         } else if (instantRecyclerView.getVisibility() == View.GONE && (1 - slideOffset) > 0) {
+
             instantRecyclerView.setVisibility(View.VISIBLE);
             clickme.setVisibility(View.VISIBLE);
             if (longSelection) {
@@ -189,9 +198,9 @@ public class Utility {
             recyclerView.setVisibility(View.VISIBLE);
             status_bar_bg.animate().translationY(0).setDuration(300).start();
             topbar.setVisibility(View.VISIBLE);
-            Utility.showStatusBar(activity);
+            MediaPickerUtil.showStatusBar(activity);
         } else if (recyclerView.getVisibility() == View.VISIBLE && (slideOffset) == 0) {
-            Utility.hideStatusBar(activity);
+            MediaPickerUtil.hideStatusBar(activity);
             recyclerView.setVisibility(View.INVISIBLE);
             topbar.setVisibility(View.GONE);
             status_bar_bg.animate().translationY(-(status_bar_bg.getHeight())).setDuration(300).start();
@@ -204,22 +213,22 @@ public class Utility {
         return Math.min(minimum, max);
     }
 
-    public static void vibe(Context c, long l) {
-        ((Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(l);
+    public static void vibe(@NonNull Context context, long l) {
+        ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(l);
     }
 
-    public static File writeImage(Bitmap bitmap) {
+    public static File writeImage(@NonNull Bitmap bitmap) {
+
         File dir = new File(Environment.getExternalStorageDirectory(), "/DCIM/Camera");
-        if (!dir.exists())
+        if (!dir.exists()) {
             dir.mkdir();
+        }
         File photo = new File(dir, "IMG_" + new SimpleDateFormat("yyyyMMdd_HHmmSS", Locale.ENGLISH).format(new Date()) + ".jpg");
         if (photo.exists()) {
             photo.delete();
         }
-
         try {
             FileOutputStream fos = new FileOutputStream(photo.getPath());
-
             bitmap.compress(Bitmap.CompressFormat.JPEG, 40, fos);
             // fos.write(jpeg);
             fos.close();
@@ -229,15 +238,15 @@ public class Utility {
         return photo;
     }
 
-    public static Bitmap getExifCorrectedBitmap(File f) {
+    public static Bitmap getExifCorrectedBitmap(@NonNull File file) {
+
         BitmapFactory.Options bounds = new BitmapFactory.Options();
         bounds.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(f.getAbsolutePath(), bounds);
-
+        BitmapFactory.decodeFile(file.getAbsolutePath(), bounds);
         BitmapFactory.Options opts = new BitmapFactory.Options();
-        Bitmap bm = BitmapFactory.decodeFile(f.getAbsolutePath(), opts);
+        Bitmap bm = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
         try {
-            ExifInterface exif = new ExifInterface(f.getAbsolutePath());
+            ExifInterface exif = new ExifInterface(file.getAbsolutePath());
 
             String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
             int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
@@ -257,18 +266,21 @@ public class Utility {
     }
 
     public static Bitmap getScaledBitmap(int maxWidth, Bitmap rotatedBitmap) {
+
         int nh = (int) (rotatedBitmap.getHeight() * (512.0 / rotatedBitmap.getWidth()));
         return Bitmap.createScaledBitmap(rotatedBitmap, maxWidth, nh, true);
     }
 
     public static Bitmap rotate(Bitmap bitmap, int i) {
+
         Matrix matrix = new Matrix();
         matrix.postRotate(i);
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
         return Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
     }
 
-    public List<Uri> getImagesFromGallary(Context context) {
+    public List<Uri> getImagesFromGallary(@NonNull Context context) {
+
         List<Uri> images = new ArrayList<>();
         Cursor imageCursor = null;
         try {
@@ -290,13 +302,13 @@ public class Utility {
     }
 
     @NonNull
-    private Uri[] getAllMediaThumbnailsPath(Context context, long id, Boolean exceptGif) {
+    private Uri[] getAllMediaThumbnailsPath(@NonNull Context context, long id, Boolean exceptGif) {
+
         ContentResolver resolver = context.getContentResolver();
         String selection = MediaStore.Images.Media.BUCKET_ID + " = ?";
         String bucketId = String.valueOf(id);
         String sort = MediaStore.Images.Media._ID + " DESC";
         String[] selectionArgs = {bucketId};
-
         Uri images = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         Cursor c;
         if (!bucketId.equals("0")) {
@@ -311,8 +323,9 @@ public class Utility {
                     setPathDir(c.getString(c.getColumnIndex(MediaStore.Images.Media.DATA)), c.getString(c.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)));
                     int position = -1;
                     do {
-                        if (exceptGif && GIF_PATTERN.matches(c.getString(c.getColumnIndex(MediaStore.Images.Media.DATA))))
+                        if (exceptGif && GIF_PATTERN.matches(c.getString(c.getColumnIndex(MediaStore.Images.Media.DATA)))) {
                             continue;
+                        }
                         int imgId = c.getInt(c.getColumnIndex(MediaStore.MediaColumns._ID));
                         Uri path = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "" + imgId);
                         imageUris[++position] = path;
@@ -330,10 +343,11 @@ public class Utility {
         return pathDir = path.replace("/" + fileName, "");
     }
 
-    public String getPathDir(Long bucketId) {
-        if (pathDir.equals("") || bucketId == 0)
-            pathDir = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DCIM + "/Camera").getAbsolutePath();
+    public String getPathDir(@NonNull Long bucketId) {
+
+        if (pathDir.equals("") || bucketId == 0) {
+            pathDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "/Camera").getAbsolutePath();
+        }
         return pathDir;
     }
 

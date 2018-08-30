@@ -87,7 +87,7 @@ public class AlbumGridAdapter extends RecyclerView.Adapter<AlbumGridAdapter.Albu
             holder.txtName.setText(album.getName());
             holder.txtDate.setText(album.getDisplayDate());
             holder.imgIcon.setImageDrawable(ContextCompat.getDrawable(context, album.getIconResId()));
-            RequestOptions options = new RequestOptions().placeholder(R.color.colorAccent).transform(new CenterCrop()).transform(new FitCenter());
+            RequestOptions options = new RequestOptions().placeholder(R.color.zz_media_picker_default_placeholder).transform(new CenterCrop()).transform(new FitCenter());
             if (album.getName().equals("Take Photo")) {
 
                 Glide.with(context).load(album.getCoverPath())
@@ -102,13 +102,13 @@ public class AlbumGridAdapter extends RecyclerView.Adapter<AlbumGridAdapter.Albu
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
 
                     int adapterPos = holder.getAdapterPosition();
                     if (adapterPos != RecyclerView.NO_POSITION) {
 
                         if (onAlbumSelectedListener != null) {
-                            onAlbumSelectedListener.onClick(album, holder.itemView, adapterPos);
+                            onAlbumSelectedListener.onClick(album, view, adapterPos);
                         }
                     }
                 }

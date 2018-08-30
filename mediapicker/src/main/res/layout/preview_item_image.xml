@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/preview_image_item"
     android:layout_width="54dp"
-    android:layout_height="54dp">
+    android:layout_height="54dp"
+    android:clipToPadding="false">
 
     <mobi.zapzap.mediapicker.widget.SquareImageView
         android:id="@+id/img_thumbnail"
@@ -20,18 +21,15 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars"/>
 
-    <mobi.zapzap.mediapicker.widget.SquareImageView
-        android:id="@+id/img_selection"
+    <View
+        android:id="@+id/selection_alpha"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent_20_alpha"
-        android:contentDescription="@string/app_name"
-        android:scaleType="center"
-        android:visibility="visible"
+        android:background="@color/zz_media_picker_transparent_20_alpha"
         app:layout_constraintBottom_toBottomOf="@+id/img_thumbnail"
         app:layout_constraintEnd_toEndOf="@+id/img_thumbnail"
         app:layout_constraintStart_toStartOf="@+id/img_thumbnail"
         app:layout_constraintTop_toTopOf="@+id/img_thumbnail"
-        tools:visibility="gone"/>
+        tools:visibility="visible"/>
 
 </android.support.constraint.ConstraintLayout>

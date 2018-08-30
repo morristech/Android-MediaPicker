@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import mobi.zapzap.mediapicker.Utility;
+import mobi.zapzap.mediapicker.MediaPickerUtil;
 
 /** Created by Wade Morris on 2018/08/27. */
 public class HeaderItemDecoration extends RecyclerView.ItemDecoration {
@@ -37,7 +37,7 @@ public class HeaderItemDecoration extends RecyclerView.ItemDecoration {
     }
     View currentHeader = getHeaderViewForItem(topChildPosition, parent);
     currentHeader.setPadding(
-        (int) (currentHeader.getPaddingLeft() - Utility.convertPixelsToDp(5, context)),
+        (int) (currentHeader.getPaddingLeft() - MediaPickerUtil.convertPixelsToDp(5, context)),
         currentHeader.getPaddingTop(),
         currentHeader.getPaddingRight(),
         currentHeader.getPaddingBottom());

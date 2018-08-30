@@ -27,15 +27,15 @@ import mobi.zapzap.mediapicker.models.Image;
 import mobi.zapzap.mediapicker.widget.HeaderItemDecoration;
 
 /**
- * Created by Wade Morris on 2018/08/27.
+ * Created by Wade Morris on 2018/08/29.
  */
-public class ImageGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class ImageLinearAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements HeaderItemDecoration.StickyHeaderInterface, SectionIndexer {
 
     private ArrayList<Image> images;
     private OnImageSelectionListener onSelectionListener;
 
-    public ImageGridAdapter(@NonNull ArrayList<Image> images) {
+    public ImageLinearAdapter(@NonNull ArrayList<Image> images) {
         this.images = images;
     }
 
@@ -119,7 +119,7 @@ public class ImageGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (viewType == Constants.VIEW_TYPE_HEADER) {
             return new HeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.header_row, parent, false));
         } else {
-            return new ImageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_view_item_image, parent, false));
+            return new ImageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_view_item_image, parent, false));
         }
     }
 
@@ -129,9 +129,9 @@ public class ImageGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         Image image = images.get(position);
         if (image != null) {
 
-            if (holder instanceof ImageViewHolder) {
+            if (holder instanceof ImageGridAdapter.ImageViewHolder) {
 
-                ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
+                ImageGridAdapter.ImageViewHolder imageViewHolder = (ImageGridAdapter.ImageViewHolder) holder;
                 Uri uri = Uri.fromFile(new File(image.getPath()));
                 if (uri != null) {
 
@@ -139,9 +139,9 @@ public class ImageGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     Glide.with(holder.itemView).load(uri).apply(options).into(imageViewHolder.preview);
                 }
                 imageViewHolder.selection.setVisibility(image.isSelected() ? View.VISIBLE : View.GONE);
-            } else if (holder instanceof HeaderViewHolder) {
+            } else if (holder instanceof ImageGridAdapter.HeaderViewHolder) {
 
-                HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
+                ImageGridAdapter.HeaderViewHolder headerViewHolder = (ImageGridAdapter.HeaderViewHolder) holder;
                 headerViewHolder.header.setText(image.getHeaderDate());
             }
         }
@@ -216,9 +216,7 @@ public class ImageGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public void onClick(View view) {
 
             int id = this.getLayoutPosition();
-            if (onSelectionListener != null) {
-                onSelectionListener.onClick(images.get(id), view, id);
-            }
+            onSelectionListener.onClick(images.get(id), view, id);
         }
 
         @Override
