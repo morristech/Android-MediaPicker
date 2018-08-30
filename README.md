@@ -1,15 +1,14 @@
-# Awesome Image Picker
+# Media Picker
 Awesome Image Picker library will pick images/gifs with beautiful interface. Supports image or gif, Single and Multiple Image selection.
 
- ![Awesome Image Picker - Example1](https://s19.postimg.org/4bxmouwbn/Image_Picker_example_1.png)
+ ![Media Picker - Example1](https://s19.postimg.org/4bxmouwbn/Image_Picker_example_1.png)
  `` ``
- ![Awesome Image Picker - Example2](https://s19.postimg.org/jlxhw1rtv/Image_Picker_example_2.png)
+ ![Media Picker - Example2](https://s19.postimg.org/jlxhw1rtv/Image_Picker_example_2.png)
  `` ``
- ![Awesome Image Picker - Example3](https://s19.postimg.org/4ehibozz7/Image_Picker_example_3.png)
+ ![Media Picker - Example3](https://s19.postimg.org/4ehibozz7/Image_Picker_example_3.png)
  `` ``
- ![Awesome Image Picker - Example4](https://s19.postimg.org/91nkdgnc3/Image_Picker_example_4.png)
+ ![Media Picker - Example4](https://s19.postimg.org/91nkdgnc3/Image_Picker_example_4.png)
  
-#### Download Demo APK from [HERE](https://github.com/myinnos/AwesomeImagePicker/raw/master/apk/image-picker-demo.apk "APK")
   
 #### Kindly use the following links to use this library:
 
@@ -25,7 +24,7 @@ allprojects {
 And then in the other gradle file(may be your app gradle or your own module library gradle, but never add in both of them to avoid conflict.)
 ```java
 dependencies {
-    compile 'com.github.myinnos:AwesomeImagePicker:1.0.2'
+    compile 'com.github.myinnos:mediapicker:1.0.0'
 }
 ```
 How to use
@@ -55,19 +54,16 @@ startActivityForResult(intent, ConstantsCustomGallery.REQUEST_CODE);
     }
 ```
 **IMP Note:** Require STORAGE_PERMISSIONS if Build.VERSION.SDK_INT >= 23.
-##### Any Queries? or Feedback, please let me know by opening a [new issue](https://github.com/myinnos/AwesomeImagePicker/issues/new)!
+##### Any Queries? or Feedback, please let me know by opening a [new issue](https://github.com/morristech/Android-MediaPicker/issues/new)!
 
 ## Contact
-#### Prabhakar Thota
-* :globe_with_meridians: Website: [myinnos.in](http://www.myinnos.in "Prabhakar Thota")
-* :email: e-mail: contact@myinnos.in
-* :mag_right: LinkedIn: [PrabhakarThota](https://www.linkedin.com/in/prabhakarthota "Prabhakar Thota on LinkedIn")
-* :thumbsup: Twitter: [@myinnos](https://twitter.com/myinnos "Prabhakar Thota on twitter")   
+#### Wade Morris
+* :email: e-mail: wade @ morristech . co . za
 
 License
 -------
 
-    Copyright 2017 MyInnos
+    Copyright 2018 Wade Morris
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
