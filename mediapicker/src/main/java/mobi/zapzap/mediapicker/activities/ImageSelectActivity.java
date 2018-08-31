@@ -1,5 +1,6 @@
 package mobi.zapzap.mediapicker.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -8,9 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -24,16 +25,20 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import mobi.zapzap.mediapicker.Constants;
-import mobi.zapzap.mediapicker.R;
+import mobi.zapzap.mediapicker.MediaPickerConstants;
 import mobi.zapzap.mediapicker.MediaPickerUtil;
+import mobi.zapzap.mediapicker.R;
 import mobi.zapzap.mediapicker.adapter.ImageGridAdapter;
+import mobi.zapzap.mediapicker.adapter.ImageLinearAdapter;
+import mobi.zapzap.mediapicker.adapter.ImagesAdapter;
 import mobi.zapzap.mediapicker.callbacks.OnImageSelectionListener;
 import mobi.zapzap.mediapicker.models.Image;
 import mobi.zapzap.mediapicker.widget.GridMarginDecoration;
 import mobi.zapzap.mediapicker.widget.HeaderItemDecoration;
 
+import static android.provider.MediaStore.Images.Media;
 import static mobi.zapzap.mediapicker.R.anim.abc_fade_in;
 import static mobi.zapzap.mediapicker.R.anim.abc_fade_out;
 
@@ -45,46 +50,50 @@ public class ImageSelectActivity extends MediaPickerActivity {
     private ArrayList<Image> images;
     private String albumName;
 
-    private TextView errorDisplay;
+    private TextView txtErrorDisplay;
     private TextView tvProfile;
     private TextView tvAdd;
-    private TextView tvSelectCount;
+    private TextView txtSelectCount;
     private LinearLayout liFinish;
 
     private GridLayoutManager gridLayoutManager;
-    private RecyclerView gridView;
-    private ImageGridAdapter adapter;
+    private LinearLayoutManager linearLayoutManager;
+    private ImagesAdapter imagesAdapter;
+    private RecyclerView imagesRecycler;
 
-    private int countSelected;
-    private boolean multiSelectEnabled = false;
-    private boolean sortAscending = false;
-    private boolean showListView = false;
+    private int countSelected = 0;
+
+    private AtomicBoolean isMultiSelection;
+    private AtomicBoolean sortAscending;
+    private AtomicBoolean showListView;
 
     private ContentObserver observer;
     private Handler handler;
     private Thread thread;
 
-    private final String[] projection = new String[]{MediaStore.Images.Media._ID,
-                                                     MediaStore.Images.Media.DISPLAY_NAME,
-                                                     MediaStore.Images.Media.DATA,
-                                                     MediaStore.Images.Media.DATE_TAKEN};
+    private static final String[] PROJECTION = new String[]{
+            Media._ID,
+            Media.DISPLAY_NAME,
+            Media.DATA,
+            Media.DATE_ADDED
+    };
 
     private final OnImageSelectionListener onSelectionListener = new OnImageSelectionListener() {
 
         @Override
         public void onClick(@NonNull Image img, @NonNull View view, int position) {
 
-            if (multiSelectEnabled) {
+            if (isMultiSelection.get()) {
 
                 toggleSelection(position);
                 //actionMode.setTitle(countSelected + " " + getString(R.string.selected));
-                tvSelectCount.setText(countSelected + " " + getResources().getString(R.string.selected));
-                tvSelectCount.setVisibility(View.VISIBLE);
+                txtSelectCount.setText(countSelected + " " + getResources().getString(R.string.selected));
+                txtSelectCount.setVisibility(View.VISIBLE);
                 tvAdd.setVisibility(View.VISIBLE);
                 tvProfile.setVisibility(View.GONE);
                 if (countSelected == 0) {
                     //actionMode.finish();
-                    tvSelectCount.setVisibility(View.GONE);
+                    txtSelectCount.setVisibility(View.GONE);
                     tvAdd.setVisibility(View.GONE);
                     tvProfile.setVisibility(View.VISIBLE);
                 }
@@ -99,16 +108,16 @@ public class ImageSelectActivity extends MediaPickerActivity {
         @Override
         public void onLongClick(@NonNull Image img, @NonNull View view, int position) {
 
-            multiSelectEnabled = !multiSelectEnabled;
+            isMultiSelection.set(!isMultiSelection.get());
             toggleSelection(position);
 
-            tvSelectCount.setText(countSelected + " " + getResources().getString(R.string.selected));
-            tvSelectCount.setVisibility(View.VISIBLE);
+            txtSelectCount.setText(getResources().getString(R.string.selected, countSelected));
+            txtSelectCount.setVisibility(View.VISIBLE);
             tvAdd.setVisibility(View.VISIBLE);
             tvProfile.setVisibility(View.GONE);
             if (countSelected == 0) {
                 //actionMode.finish();
-                tvSelectCount.setVisibility(View.GONE);
+                txtSelectCount.setVisibility(View.GONE);
                 tvAdd.setVisibility(View.GONE);
                 tvProfile.setVisibility(View.VISIBLE);
             }
@@ -122,31 +131,35 @@ public class ImageSelectActivity extends MediaPickerActivity {
         setContentView(R.layout.activity_image_select);
         setView(findViewById(R.id.layout_image_select));
 
-        tvProfile = (TextView) findViewById(R.id.tvProfile);
-        tvAdd = (TextView) findViewById(R.id.tvAdd);
-        tvSelectCount = (TextView) findViewById(R.id.tvSelectCount);
-        tvProfile.setText(R.string.image_view);
-        liFinish = (LinearLayout) findViewById(R.id.liFinish);
-
         Intent intent = getIntent();
         if (intent == null) {
             finish();
         }
-        albumName = intent.getStringExtra(Constants.INTENT_EXTRA_ALBUM_NAME);
-        multiSelectEnabled = intent.getBooleanExtra(Constants.INTENT_EXTRA_MULTI_SELECTION, false);
-        errorDisplay = (TextView) findViewById(R.id.text_view_error);
-        errorDisplay.setVisibility(View.INVISIBLE);
+        isMultiSelection = new AtomicBoolean(false);
+        sortAscending = new AtomicBoolean(false);
+        showListView = new AtomicBoolean(false);
+        albumName = intent.getStringExtra(MediaPickerConstants.INTENT_EXTRA_ALBUM_NAME);
+        isMultiSelection.set(intent.getBooleanExtra(MediaPickerConstants.INTENT_EXTRA_SELECTION_MODE, false));
 
-        gridView = (RecyclerView) findViewById(R.id.grid_view_image);
-        gridView.setHasFixedSize(true);
-        gridLayoutManager = new GridLayoutManager(ImageSelectActivity.this, Constants.IMAGE_GRID_SPAN_COUNT);
+        tvProfile = (TextView) findViewById(R.id.tvProfile);
+        tvAdd = (TextView) findViewById(R.id.tvAdd);
+        txtSelectCount = (TextView) findViewById(R.id.tvSelectCount);
+        tvProfile.setText(R.string.image_view);
+        liFinish = (LinearLayout) findViewById(R.id.liFinish);
+        txtErrorDisplay = (TextView) findViewById(R.id.text_view_error);
+        txtErrorDisplay.setVisibility(View.INVISIBLE);
+
+        imagesRecycler = (RecyclerView) findViewById(R.id.grid_view_image);
+        imagesRecycler.setHasFixedSize(true);
+        gridLayoutManager = new GridLayoutManager(ImageSelectActivity.this, MediaPickerConstants.IMAGE_GRID_SPAN_COUNT);
+        linearLayoutManager = new LinearLayoutManager(ImageSelectActivity.this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         liFinish.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
 
-                if (tvSelectCount.getVisibility() == View.VISIBLE) {
+                if (txtSelectCount.getVisibility() == View.VISIBLE) {
                     deselectAll();
                 } else {
                     finish();
@@ -156,7 +169,6 @@ public class ImageSelectActivity extends MediaPickerActivity {
         });
 
         tvAdd.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 //sendIntent();
@@ -167,7 +179,7 @@ public class ImageSelectActivity extends MediaPickerActivity {
         });
     }
 
-    @Override
+    @Override @SuppressLint("HandlerLeak")
     protected void onStart() {
 
         super.onStart();
@@ -178,57 +190,64 @@ public class ImageSelectActivity extends MediaPickerActivity {
 
                 switch (msg.what) {
 
-                    case Constants.PERMISSION_GRANTED: {
+                    case MediaPickerConstants.PERMISSION_GRANTED: {
                         loadImages();
                         break;
                     }
-                    case Constants.FETCH_STARTED: {
-                        gridView.setVisibility(View.INVISIBLE);
+                    case MediaPickerConstants.FETCH_STARTED: {
+                        imagesRecycler.setVisibility(View.INVISIBLE);
                         break;
                     }
-                    case Constants.FETCH_COMPLETED: {
+                    case MediaPickerConstants.FETCH_COMPLETED: {
                         /*
-                        If adapter is null, this implies that the loaded images will be shown
+                        If imageGridAdapter is null, this implies that the loaded images will be shown
                         for the first time, hence send FETCH_COMPLETED message.
-                        However, if adapter has been initialised, this thread was run either
+                        However, if imageGridAdapter has been initialised, this thread was run either
                         due to the activity being restarted or content being changed.
                          */
-                        if (adapter == null) {
+                        if (imagesAdapter == null) {
 
-                            adapter = new ImageGridAdapter(images);
-                            adapter.addOnSelectionListener(onSelectionListener);
-                            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                            if (showListView.get()) {
 
-                                @Override
-                                public int getSpanSize(int position) {
+                                imagesAdapter = new ImageLinearAdapter(images);
+                                imagesRecycler.setLayoutManager(linearLayoutManager);
+                            } else {
 
-                                    if (adapter.getItemViewType(position) == Constants.VIEW_TYPE_HEADER) {
-                                        return Constants.IMAGE_GRID_SPAN_COUNT;
+                                imagesAdapter = new ImageGridAdapter(images);
+                                gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+
+                                    @Override
+                                    public int getSpanSize(int position) {
+
+                                        if (imagesAdapter.getItemViewType(position) == MediaPickerConstants.VIEW_TYPE_HEADER) {
+                                            return MediaPickerConstants.IMAGE_GRID_SPAN_COUNT;
+                                        }
+                                        return 1;
                                     }
-                                    return 1;
-                                }
-                            });
-                            gridView.setLayoutManager(gridLayoutManager);
-                            gridView.addItemDecoration(new HeaderItemDecoration(ImageSelectActivity.this, adapter));
-                            gridView.addItemDecoration(new GridMarginDecoration(ImageSelectActivity.this, 2, 2, 2, 2));
-                            gridView.setAdapter(adapter);
-                            gridView.setVisibility(View.VISIBLE);
+                                });
+                                imagesRecycler.setLayoutManager(gridLayoutManager);
+                                imagesRecycler.addItemDecoration(new HeaderItemDecoration(ImageSelectActivity.this, imagesAdapter));
+                                imagesRecycler.addItemDecoration(new GridMarginDecoration(ImageSelectActivity.this, 2, 2, 2, 2));
+                            }
+                            imagesAdapter.addOnSelectionListener(onSelectionListener);
+                            imagesRecycler.setAdapter(imagesAdapter);
+                            imagesRecycler.setVisibility(View.VISIBLE);
                         } else {
 
-                            adapter.notifyDataSetChanged();
+                            adapterDataSetChanged();
                             /* Some selected images may have been deleted hence update action mode title */
                             countSelected = msg.arg1;
                             //actionMode.setTitle(countSelected + " " + getString(R.string.selected));
-                            tvSelectCount.setText(countSelected + " " + getString(R.string.selected));
-                            tvSelectCount.setVisibility(View.VISIBLE);
+                            txtSelectCount.setText(getResources().getString(R.string.selected, countSelected));
+                            txtSelectCount.setVisibility(View.VISIBLE);
                             tvAdd.setVisibility(View.VISIBLE);
                             tvProfile.setVisibility(View.GONE);
                         }
                         break;
                     }
-                    case Constants.ERROR: {
+                    case MediaPickerConstants.ERROR: {
 
-                        errorDisplay.setVisibility(View.VISIBLE);
+                        txtErrorDisplay.setVisibility(View.VISIBLE);
                         break;
                     }
                     default: {
@@ -238,14 +257,12 @@ public class ImageSelectActivity extends MediaPickerActivity {
             }
         };
         observer = new ContentObserver(handler) {
-
             @Override
             public void onChange(boolean selfChange) {
-
                 loadImages();
             }
         };
-        getContentResolver().registerContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false, observer);
+        getContentResolver().registerContentObserver(Media.EXTERNAL_CONTENT_URI, false, observer);
         checkPermission();
     }
 
@@ -266,11 +283,11 @@ public class ImageSelectActivity extends MediaPickerActivity {
     protected void onDestroy() {
 
         super.onDestroy();
-        images = null;
-        if (adapter != null) {
-            //adapter.releaseResources();
+        if (imagesAdapter != null) {
+            //imageGridAdapter.releaseResources();
         }
-        //gridView.setOnItemClickListener(null);
+        images = null;
+        //imagesRecycler.setOnItemClickListener(null);
     }
 
     @Override
@@ -288,24 +305,41 @@ public class ImageSelectActivity extends MediaPickerActivity {
             onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.menu_image_select_sort) {
-            supportInvalidateOptionsMenu();
-            if (adapter != null) {
 
-                sortAscending = !sortAscending;
-                adapter.sortList(sortAscending);
+            supportInvalidateOptionsMenu();
+            sortAscending.set(!sortAscending.get());
+            if (imagesRecycler != null) {
+
+                imagesAdapter.sortList(sortAscending.get());
                 return true;
             }
             return false;
         } else if (item.getItemId() == R.id.menu_image_list_view) {
-            supportInvalidateOptionsMenu();
-            if (gridView != null) {
 
-                showListView = !showListView;
-                gridView.setLayoutManager(gridLayoutManager);
-                gridView.setAdapter(adapter);
-                return true;
+            supportInvalidateOptionsMenu();
+            showListView.set(!showListView.get());
+            if (showListView.get()) {
+
+                imagesAdapter = new ImageLinearAdapter(images);
+                imagesRecycler.setLayoutManager(linearLayoutManager);
+            } else {
+
+                imagesAdapter = new ImageGridAdapter(images);
+                gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+
+                    @Override
+                    public int getSpanSize(int position) {
+
+                        if (imagesAdapter.getItemViewType(position) == MediaPickerConstants.VIEW_TYPE_HEADER) {
+                            return MediaPickerConstants.IMAGE_GRID_SPAN_COUNT;
+                        }
+                        return 1;
+                    }
+                });
+                imagesRecycler.setLayoutManager(gridLayoutManager);
             }
-            return false;
+            imagesRecycler.setAdapter(imagesAdapter);
+            return true;
         } else {
             return false;
         }
@@ -313,29 +347,36 @@ public class ImageSelectActivity extends MediaPickerActivity {
 
     private void toggleSelection(int position) {
 
-        if (!images.get(position).isSelected() && countSelected >= Constants.limit) {
-            Toast.makeText(getApplicationContext(), String.format(getString(R.string.limit_exceeded), Constants.DEFAULT_LIMIT), Toast.LENGTH_SHORT).show();
-            return;
+        if (images != null) {
+
+            Image image = images.get(position);
+            if (image != null) {
+
+                if (!image.isSelected() && countSelected >= MediaPickerConstants.DEFAULT_SELECTION_LIMIT) {
+                    Toast.makeText(getApplicationContext(), String.format(getResources().getString(R.string.limit_exceeded), MediaPickerConstants.DEFAULT_SELECTION_LIMIT), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                image.setSelected(!image.isSelected());
+                if (image.isSelected()) {
+                    countSelected++;
+                } else {
+                    countSelected--;
+                }
+                adapterDataSetChanged();
+            }
         }
-        images.get(position).setSelected(!images.get(position).isSelected());
-        if (images.get(position).isSelected()) {
-            countSelected++;
-        } else {
-            countSelected--;
-        }
-        adapter.notifyDataSetChanged();
     }
 
     private void deselectAll() {
 
         tvProfile.setVisibility(View.VISIBLE);
         tvAdd.setVisibility(View.GONE);
-        tvSelectCount.setVisibility(View.GONE);
+        txtSelectCount.setVisibility(View.GONE);
         for (int i = 0, l = images.size(); i < l; i++) {
             images.get(i).setSelected(false);
         }
         countSelected = 0;
-        adapter.notifyDataSetChanged();
+        adapterDataSetChanged();
     }
 
     private ArrayList<Image> getSelected() {
@@ -352,7 +393,7 @@ public class ImageSelectActivity extends MediaPickerActivity {
     private void sendIntent() {
 
         Intent intent = new Intent();
-        intent.putParcelableArrayListExtra(Constants.INTENT_EXTRA_LIST_IMAGES, getSelected());
+        intent.putParcelableArrayListExtra(MediaPickerConstants.INTENT_EXTRA_LIST_IMAGES, getSelected());
         setResult(RESULT_OK, intent);
         finish();
         overridePendingTransition(abc_fade_in, abc_fade_out);
@@ -360,6 +401,13 @@ public class ImageSelectActivity extends MediaPickerActivity {
 
     private void loadImages() {
         startThread(new ImageLoaderRunnable());
+    }
+
+    private void adapterDataSetChanged() {
+
+        if (imagesAdapter != null) {
+            imagesAdapter.notifyDataSetChanged();
+        }
     }
 
     private class ImageLoaderRunnable implements Runnable {
@@ -371,12 +419,12 @@ public class ImageSelectActivity extends MediaPickerActivity {
 
                 Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
             /*
-            If the adapter is null, this is first time this activity's view is
+            If the imageGridAdapter is null, this is first time this activity's view is
             being shown, hence send FETCH_STARTED message to show progress bar
             while images are loaded from phone
              */
-                if (adapter == null) {
-                    sendMessage(Constants.FETCH_STARTED);
+                if (imagesAdapter == null) {
+                    sendMessage(MediaPickerConstants.FETCH_STARTED);
                 }
                 File file;
                 HashSet<Long> selectedImages = new HashSet<>();
@@ -391,33 +439,29 @@ public class ImageSelectActivity extends MediaPickerActivity {
                         }
                     }
                 }
-                Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
-                        MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " =?", new String[]{albumName}, MediaStore.Images.Media.DATE_ADDED);
+                Cursor cursor = getContentResolver().query(Media.EXTERNAL_CONTENT_URI, PROJECTION,
+                        Media.BUCKET_DISPLAY_NAME + " =?", new String[]{albumName},
+                        Media.DATE_ADDED);
                 if (cursor == null) {
-                    sendMessage(Constants.ERROR);
+                    sendMessage(MediaPickerConstants.ERROR);
                     return;
                 }
-            /*
-            In case this runnable is executed to onChange calling loadImages,
-            using countSelected variable can result in a race condition. To avoid that,
-            tempCountSelected keeps track of number of selected images. On handling
-            FETCH_COMPLETED message, countSelected is assigned value of tempCountSelected.
-             */
                 int tempCountSelected = 0;
                 ArrayList<Image> temp = new ArrayList<>(cursor.getCount());
                 String header = "";
                 Calendar calendar;
                 if (cursor.moveToLast()) {
+
                     do {
                         if (Thread.interrupted()) {
                             cursor.close();
                             return;
                         }
-                        long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
-                        String name = cursor.getString(cursor.getColumnIndex(projection[1]));
-                        String path = cursor.getString(cursor.getColumnIndex(projection[2]));
-                        long capturedTimestamp = cursor.getLong(cursor.getColumnIndex(projection[3]));
-                        Uri contentPath = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "" + cursor.getInt(cursor.getColumnIndex(projection[0])));
+                        long id = cursor.getLong(cursor.getColumnIndex(PROJECTION[0]));
+                        String name = cursor.getString(cursor.getColumnIndex(PROJECTION[1]));
+                        String path = cursor.getString(cursor.getColumnIndex(PROJECTION[2]));
+                        long capturedTimestamp = cursor.getLong(cursor.getColumnIndex(PROJECTION[3]));
+                        Uri contentPath = Uri.withAppendedPath(Media.EXTERNAL_CONTENT_URI, "" + cursor.getInt(cursor.getColumnIndex(PROJECTION[0])));
                         boolean isSelected = selectedImages.contains(id);
                         if (isSelected) {
                             tempCountSelected++;
@@ -434,12 +478,12 @@ public class ImageSelectActivity extends MediaPickerActivity {
                 }
                 cursor.close();
                 if (images == null) {
-                    images = new ArrayList<>();
+                    images = new ArrayList<Image>();
                 } else {
                     images.clear();
                 }
                 images.addAll(temp);
-                sendMessage(Constants.FETCH_COMPLETED, tempCountSelected);
+                sendMessage(MediaPickerConstants.FETCH_COMPLETED, tempCountSelected);
             }
         }
     }
@@ -481,21 +525,24 @@ public class ImageSelectActivity extends MediaPickerActivity {
 
     @Override
     protected void permissionGranted() {
-
-        sendMessage(Constants.PERMISSION_GRANTED);
+        sendMessage(MediaPickerConstants.PERMISSION_GRANTED);
     }
 
     @Override
     protected void hideViews() {
-        gridView.setVisibility(View.INVISIBLE);
+
+        if (imagesRecycler != null) {
+            imagesRecycler.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
     public void onBackPressed() {
 
-        if (tvSelectCount.getVisibility() == View.VISIBLE) {
+        if (txtSelectCount.getVisibility() == View.VISIBLE) {
             deselectAll();
         } else {
+
             super.onBackPressed();
             overridePendingTransition(abc_fade_in, abc_fade_out);
             finish();

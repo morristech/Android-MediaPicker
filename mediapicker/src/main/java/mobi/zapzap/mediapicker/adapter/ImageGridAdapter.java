@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import mobi.zapzap.mediapicker.Constants;
+import mobi.zapzap.mediapicker.MediaPickerConstants;
 import mobi.zapzap.mediapicker.R;
 import mobi.zapzap.mediapicker.callbacks.OnImageSelectionListener;
 import mobi.zapzap.mediapicker.callbacks.SectionIndexer;
@@ -29,82 +29,19 @@ import mobi.zapzap.mediapicker.widget.HeaderItemDecoration;
 /**
  * Created by Wade Morris on 2018/08/27.
  */
-public class ImageGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-        implements HeaderItemDecoration.StickyHeaderInterface, SectionIndexer {
+public class ImageGridAdapter extends ImagesAdapter implements HeaderItemDecoration.StickyHeaderInterface, SectionIndexer {
 
-    private ArrayList<Image> images;
-    private OnImageSelectionListener onSelectionListener;
+    private static final String TAG = "ImageGridAdapter";
 
     public ImageGridAdapter(@NonNull ArrayList<Image> images) {
         this.images = images;
-    }
-
-    public ArrayList<Image> getItemList() {
-        return images;
-    }
-
-    private void add(@NonNull Image image) {
-
-        images.add(image);
-        notifyItemInserted(images.size() - 1);
-    }
-
-    public void addAll(@NonNull ArrayList<Image> newImages) {
-        for (Image image : newImages) {
-            add(image);
-        }
-    }
-
-    public void remove(@NonNull Image image) {
-
-        int position = images.indexOf(image);
-        if (position > -1) {
-            images.remove(position);
-            notifyItemRemoved(position);
-        }
-    }
-
-    public void clear() {
-        while (getItemCount() > 0) {
-            remove(getItem(0));
-        }
-    }
-
-    public Image getItem(int position){
-        return images.get(position);
-    }
-
-    public void addOnSelectionListener(@NonNull OnImageSelectionListener onSelectionListener) {
-        this.onSelectionListener = onSelectionListener;
     }
 
     @Override
     public int getItemViewType(int position) {
 
         Image i = images.get(position);
-        return (i.getContentPath().equalsIgnoreCase("")) ? Constants.VIEW_TYPE_HEADER : Constants.VIEW_TYPE_ITEM;
-    }
-
-    public void sortList(boolean assending) {
-
-        if (assending) {
-
-            Collections.sort(images, new Comparator<Image>() {
-                @Override
-                public int compare(Image a, Image b) {
-                    return (a.getTimestamp() < b.getTimestamp()) ? -1 : ((a.getTimestamp() == b.getTimestamp()) ? 0 : 1);
-                }
-            });
-        } else {
-
-            Collections.sort(images, new Comparator<Image>() {
-                @Override
-                public int compare(Image a, Image b) {
-                    return (b.getTimestamp() < a.getTimestamp()) ? -1 : ((b.getTimestamp() == a.getTimestamp()) ? 0 : 1);
-                }
-            });
-        }
-        notifyDataSetChanged();
+        return (i.getContentPath().equalsIgnoreCase("")) ? MediaPickerConstants.VIEW_TYPE_HEADER : MediaPickerConstants.VIEW_TYPE_ITEM;
     }
 
     @Override
@@ -116,7 +53,7 @@ public class ImageGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        if (viewType == Constants.VIEW_TYPE_HEADER) {
+        if (viewType == MediaPickerConstants.VIEW_TYPE_HEADER) {
             return new HeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.header_row, parent, false));
         } else {
             return new ImageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_view_item_image, parent, false));
@@ -136,7 +73,7 @@ public class ImageGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 if (uri != null) {
 
                     RequestOptions options = new RequestOptions().placeholder(R.color.zz_media_picker_default_placeholder).transform(new CenterCrop()).transform(new FitCenter());
-                    Glide.with(holder.itemView).load(uri).apply(options).into(imageViewHolder.preview);
+                    Glide.with(holder.itemView).load(uri).apply(options).into(imageViewHolder.imgThumbnail);
                 }
                 imageViewHolder.selection.setVisibility(image.isSelected() ? View.VISIBLE : View.GONE);
             } else if (holder instanceof HeaderViewHolder) {
@@ -145,11 +82,6 @@ public class ImageGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 headerViewHolder.header.setText(image.getHeaderDate());
             }
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return images != null ? images.size() : 0;
     }
 
     @Override
@@ -180,7 +112,7 @@ public class ImageGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public boolean isHeader(int itemPosition) {
-        return getItemViewType(itemPosition) == 1;
+        return getItemViewType(itemPosition) == MediaPickerConstants.VIEW_TYPE_HEADER;
     }
 
     @Override
@@ -200,13 +132,13 @@ public class ImageGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-        ImageView preview;
+        ImageView imgThumbnail;
         View selection;
 
         ImageViewHolder(@NonNull View itemView) {
 
             super(itemView);
-            preview = itemView.findViewById(R.id.img_thumbnail);
+            imgThumbnail = itemView.findViewById(R.id.img_thumbnail);
             selection = itemView.findViewById(R.id.img_alpha);
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);

@@ -6,7 +6,10 @@ import android.provider.MediaStore;
 /**
  * Created by Zapper Development on 03-11-2016.
  */
-public final class Constants {
+public final class MediaPickerConstants {
+
+    private MediaPickerConstants() {
+    }
 
     public static final int PERMISSION_REQUEST_CODE = 1000;
     public static final int PERMISSION_GRANTED = 1001;
@@ -34,27 +37,29 @@ public final class Constants {
      */
     public static final int PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 23;
 
-    public static final String INTENT_EXTRA_ALBUM_NAME = "album";
+    public static final String INTENT_EXTRA_ALBUM = "album";
+    public static final String INTENT_EXTRA_ALBUM_NAME = "album_name";
     public static final String INTENT_EXTRA_IMAGE = "image";
     public static final String INTENT_EXTRA_LIST_IMAGES = "list_images";
-    public static final String INTENT_EXTRA_LIMIT = "limit";
-    public static final String INTENT_EXTRA_MULTI_SELECTION = "selection_mode";
-    public static final int DEFAULT_LIMIT = 10;
-
+    public static final String INTENT_EXTRA_LIMIT = "selection_limit";
+    public static final String INTENT_EXTRA_SELECTION_MODE = "selection_mode";
     //Maximum number of images that can be selected at a time
-    public static int limit;
+    public static final int DEFAULT_SELECTION_LIMIT = 10;
 
-    public static final int sScrollbarAnimDuration = 300;
-    public static String[] PROJECTION = new String[]{
-            MediaStore.Images.Media.DATA,
+
+    public static final int SCROLLBAR_ANIM_DURATION = 300;
+
+    public static final String[] IMAGE_DEFAULT_PROJECTION = new String[]{
             MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
             MediaStore.Images.Media.BUCKET_ID,
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+            MediaStore.Images.Media.DATA,
             MediaStore.Images.Media.DATE_TAKEN,
             MediaStore.Images.Media.DATE_ADDED,
             MediaStore.Images.Media.DATE_MODIFIED,
     };
-    public static Uri URI = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-    public static String ORDERBY = MediaStore.Images.Media.DATE_TAKEN + " DESC";
+
+    public static final Uri IMAGE_CONTENT_URI = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+    public static final String DEFAULT_IMAGE_ORDER_BY = MediaStore.Images.Media.DATE_ADDED + " DESC";
 
 }

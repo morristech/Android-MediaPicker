@@ -15,7 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
-import mobi.zapzap.mediapicker.Constants;
+import mobi.zapzap.mediapicker.MediaPickerConstants;
 import mobi.zapzap.mediapicker.R;
 import mobi.zapzap.mediapicker.callbacks.OnImageSelectionListener;
 import mobi.zapzap.mediapicker.models.Image;
@@ -74,7 +74,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.preview_item_image, parent, false);
-        if (viewType == Constants.VIEW_TYPE_HEADER) {
+        if (viewType == MediaPickerConstants.VIEW_TYPE_HEADER) {
             return new EmptyViewHolder(view);
         } else {
             return new ImageViewHolder(view);
@@ -83,7 +83,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-        return (TextUtils.isEmpty(images.get(position).getContentPath())) ? Constants.VIEW_TYPE_HEADER : Constants.VIEW_TYPE_ITEM;
+        return (TextUtils.isEmpty(images.get(position).getContentPath())) ? MediaPickerConstants.VIEW_TYPE_HEADER : MediaPickerConstants.VIEW_TYPE_ITEM;
     }
 
     @Override

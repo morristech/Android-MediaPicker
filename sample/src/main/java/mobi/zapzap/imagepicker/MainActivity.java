@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import mobi.zapzap.mediapicker.activities.AlbumSelectActivity;
-import mobi.zapzap.mediapicker.Constants;
+import mobi.zapzap.mediapicker.MediaPickerConstants;
 import mobi.zapzap.mediapicker.models.Image;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,13 +50,13 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         // opining custom gallery
                         Intent intent = new Intent(MainActivity.this, AlbumSelectActivity.class);
-                        intent.putExtra(Constants.INTENT_EXTRA_LIMIT, LIMIT);
-                        startActivityForResult(intent, Constants.REQUEST_CODE);
+                        intent.putExtra(MediaPickerConstants.INTENT_EXTRA_LIMIT, LIMIT);
+                        startActivityForResult(intent, MediaPickerConstants.REQUEST_CODE);
                     }
                 } else {
                     Intent intent = new Intent(MainActivity.this, AlbumSelectActivity.class);
-                    intent.putExtra(Constants.INTENT_EXTRA_LIMIT, LIMIT);
-                    startActivityForResult(intent, Constants.REQUEST_CODE);
+                    intent.putExtra(MediaPickerConstants.INTENT_EXTRA_LIMIT, LIMIT);
+                    startActivityForResult(intent, MediaPickerConstants.REQUEST_CODE);
                 }
             }
         });
@@ -67,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Constants.REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == MediaPickerConstants.REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             //The array list has the image paths of the selected images
-            ArrayList<Image> images = data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_LIST_IMAGES);
+            ArrayList<Image> images = data.getParcelableArrayListExtra(MediaPickerConstants.INTENT_EXTRA_LIST_IMAGES);
             for (int i = 0; i < images.size(); i++) {
 
                 Uri uri = Uri.fromFile(new File(images.get(i).getPath()));

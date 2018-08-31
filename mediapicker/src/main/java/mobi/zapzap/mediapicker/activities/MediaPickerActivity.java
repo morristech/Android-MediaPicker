@@ -12,7 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import mobi.zapzap.mediapicker.Constants;
+import mobi.zapzap.mediapicker.MediaPickerConstants;
 import mobi.zapzap.mediapicker.R;
 
 public class MediaPickerActivity extends AppCompatActivity {
@@ -26,7 +26,7 @@ public class MediaPickerActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             permissionGranted();
         } else {
-            ActivityCompat.requestPermissions(this, permissions, Constants.PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, permissions, MediaPickerConstants.PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -53,7 +53,7 @@ public class MediaPickerActivity extends AppCompatActivity {
                         ActivityCompat.requestPermissions(
                                 MediaPickerActivity.this,
                                 permissions,
-                                Constants.PERMISSION_REQUEST_CODE);
+                                MediaPickerConstants.PERMISSION_REQUEST_CODE);
                     }
                 });
 
@@ -82,7 +82,7 @@ public class MediaPickerActivity extends AppCompatActivity {
                         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         intent.setData(uri);
-                        startActivityForResult(intent, Constants.PERMISSION_REQUEST_CODE);
+                        startActivityForResult(intent, MediaPickerConstants.PERMISSION_REQUEST_CODE);
                     }
                 });
 
@@ -95,7 +95,7 @@ public class MediaPickerActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode != Constants.PERMISSION_REQUEST_CODE
+        if (requestCode != MediaPickerConstants.PERMISSION_REQUEST_CODE
                 || grantResults.length == 0
                 || grantResults[0] == PackageManager.PERMISSION_DENIED) {
             permissionDenied();

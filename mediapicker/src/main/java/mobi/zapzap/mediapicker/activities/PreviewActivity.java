@@ -23,7 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
-import mobi.zapzap.mediapicker.Constants;
+import mobi.zapzap.mediapicker.MediaPickerConstants;
 import mobi.zapzap.mediapicker.R;
 import mobi.zapzap.mediapicker.adapter.ImagePreviewAdapter;
 import mobi.zapzap.mediapicker.callbacks.OnImageSelectionListener;
@@ -75,14 +75,14 @@ public class PreviewActivity extends AppCompatActivity {
     public static Intent createIntent(@NonNull Context context, @NonNull Image image) {
 
         Intent intent = new Intent(context, PreviewActivity.class);
-        intent.putExtra(Constants.INTENT_EXTRA_IMAGE, image);
+        intent.putExtra(MediaPickerConstants.INTENT_EXTRA_IMAGE, image);
         return intent;
     }
 
     public static Intent createIntent(@NonNull Context context, @NonNull ArrayList<Image> images) {
 
         Intent intent = new Intent(context, PreviewActivity.class);
-        intent.putExtra(Constants.INTENT_EXTRA_LIST_IMAGES, images);
+        intent.putExtra(MediaPickerConstants.INTENT_EXTRA_LIST_IMAGES, images);
         return intent;
     }
 
@@ -125,12 +125,12 @@ public class PreviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_preview);
         if (getIntent() != null) {
 
-            if (getIntent().hasExtra(Constants.INTENT_EXTRA_LIST_IMAGES)) {
-                this.images = getIntent().getParcelableArrayListExtra(Constants.INTENT_EXTRA_LIST_IMAGES);
-            } else if (getIntent().hasExtra(Constants.INTENT_EXTRA_IMAGE)){
+            if (getIntent().hasExtra(MediaPickerConstants.INTENT_EXTRA_LIST_IMAGES)) {
+                this.images = getIntent().getParcelableArrayListExtra(MediaPickerConstants.INTENT_EXTRA_LIST_IMAGES);
+            } else if (getIntent().hasExtra(MediaPickerConstants.INTENT_EXTRA_IMAGE)){
 
                 this.images = new ArrayList<Image>();
-                Image image = getIntent().getParcelableExtra(Constants.INTENT_EXTRA_IMAGE);
+                Image image = getIntent().getParcelableExtra(MediaPickerConstants.INTENT_EXTRA_IMAGE);
                 if (image != null) {
                     images.add(image);
                 }
@@ -147,9 +147,9 @@ public class PreviewActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
                     Intent intent = new Intent(v.getContext(), AlbumSelectActivity.class);
-                    intent.putExtra(Constants.INTENT_EXTRA_LIMIT, Constants.DEFAULT_LIMIT);
-                    intent.putExtra(Constants.INTENT_EXTRA_MULTI_SELECTION, true);
-                    startActivityForResult(intent, Constants.REQUEST_CODE);
+                    intent.putExtra(MediaPickerConstants.INTENT_EXTRA_LIMIT, MediaPickerConstants.DEFAULT_SELECTION_LIMIT);
+                    intent.putExtra(MediaPickerConstants.INTENT_EXTRA_SELECTION_MODE, true);
+                    startActivityForResult(intent, MediaPickerConstants.REQUEST_CODE);
                 }
             });
             btnSend = (FloatingActionButton) findViewById(R.id.btn_send_attachment);
@@ -206,7 +206,7 @@ public class PreviewActivity extends AppCompatActivity {
     private void sendIntent() {
 
         Intent intent = new Intent();
-        intent.putParcelableArrayListExtra(Constants.INTENT_EXTRA_LIST_IMAGES, images);
+        intent.putParcelableArrayListExtra(MediaPickerConstants.INTENT_EXTRA_LIST_IMAGES, images);
         setResult(RESULT_OK, intent);
         finish();
         overridePendingTransition(abc_fade_in, abc_fade_out);

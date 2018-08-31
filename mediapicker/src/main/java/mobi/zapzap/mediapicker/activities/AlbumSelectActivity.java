@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 
-import mobi.zapzap.mediapicker.Constants;
+import mobi.zapzap.mediapicker.MediaPickerConstants;
 import mobi.zapzap.mediapicker.R;
 import mobi.zapzap.mediapicker.adapter.AlbumGridAdapter;
 import mobi.zapzap.mediapicker.callbacks.OnAlbumSelectionListener;
@@ -56,14 +56,15 @@ public class AlbumSelectActivity extends MediaPickerActivity implements OnAlbumS
     private Handler handler;
     private Thread thread;
 
+    private int selectionLimit = MediaPickerConstants.DEFAULT_SELECTION_LIMIT;
     private boolean multiSelectEnabled = false;
 
-    private final String[] projection = new String[]{
+    private static final String[] PROJECTION = new String[]{
             MediaStore.Images.Media.BUCKET_ID,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
             MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.DATE_ADDED,
-            };
+            MediaStore.Images.Media.DATE_ADDED
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +77,8 @@ public class AlbumSelectActivity extends MediaPickerActivity implements OnAlbumS
         if (intent == null) {
             finish();
         }
-        Constants.limit = intent.getIntExtra(Constants.INTENT_EXTRA_LIMIT, Constants.DEFAULT_LIMIT);
-        multiSelectEnabled = intent.getBooleanExtra(Constants.INTENT_EXTRA_MULTI_SELECTION, false);
+        selectionLimit = intent.getIntExtra(MediaPickerConstants.INTENT_EXTRA_LIMIT, MediaPickerConstants.DEFAULT_SELECTION_LIMIT);
+        multiSelectEnabled = intent.getBooleanExtra(MediaPickerConstants.INTENT_EXTRA_SELECTION_MODE, false);
         errorDisplay = (TextView) findViewById(R.id.text_view_error);
         errorDisplay.setVisibility(View.INVISIBLE);
 
@@ -87,13 +88,11 @@ public class AlbumSelectActivity extends MediaPickerActivity implements OnAlbumS
 
         gridView = (RecyclerView) findViewById(R.id.grid_view_album);
         gridView.setHasFixedSize(true);
-        gridLayoutManager = new GridLayoutManager(AlbumSelectActivity.this, Constants.ALBUM_GRID_SPAN_COUNT);
+        gridLayoutManager = new GridLayoutManager(AlbumSelectActivity.this, MediaPickerConstants.ALBUM_GRID_SPAN_COUNT);
 
         liFinish.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-
                 finish();
                 overridePendingTransition(abc_fade_in, abc_fade_out);
             }
@@ -111,15 +110,15 @@ public class AlbumSelectActivity extends MediaPickerActivity implements OnAlbumS
 
                 switch (msg.what) {
 
-                    case Constants.PERMISSION_GRANTED: {
+                    case MediaPickerConstants.PERMISSION_GRANTED: {
                         loadAlbums();
                         break;
                     }
-                    case Constants.FETCH_STARTED: {
+                    case MediaPickerConstants.FETCH_STARTED: {
                         gridView.setVisibility(View.INVISIBLE);
                         break;
                     }
-                    case Constants.FETCH_COMPLETED: {
+                    case MediaPickerConstants.FETCH_COMPLETED: {
                         if (albumGridAdapter == null) {
 
                             albumGridAdapter = new AlbumGridAdapter(AlbumSelectActivity.this);
@@ -133,7 +132,7 @@ public class AlbumSelectActivity extends MediaPickerActivity implements OnAlbumS
                         }
                         break;
                     }
-                    case Constants.ERROR: {
+                    case MediaPickerConstants.ERROR: {
                         errorDisplay.setVisibility(View.VISIBLE);
                         break;
                     }
@@ -193,7 +192,7 @@ public class AlbumSelectActivity extends MediaPickerActivity implements OnAlbumS
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.REQUEST_CODE
+        if (requestCode == MediaPickerConstants.REQUEST_CODE
                 && resultCode == RESULT_OK
                 && data != null) {
             setResult(RESULT_OK, data);
@@ -222,14 +221,14 @@ public class AlbumSelectActivity extends MediaPickerActivity implements OnAlbumS
     @Override
     public void onClick(@NonNull Album album, @NonNull View view, int position) {
 
-        if (album.getName().equals(getString(R.string.capture_photo))) {
+        if (album.getName().equals(getResources().getString(R.string.capture_photo))) {
             //HelperClass.displayMessageOnScreen(getApplicationContext(), "HMM!", false);
         } else {
 
             Intent intent = new Intent(getApplicationContext(), ImageSelectActivity.class);
-            intent.putExtra(Constants.INTENT_EXTRA_ALBUM_NAME, album.getName());
-            intent.putExtra(Constants.INTENT_EXTRA_MULTI_SELECTION, multiSelectEnabled);
-            startActivityForResult(intent, Constants.REQUEST_CODE);
+            intent.putExtra(MediaPickerConstants.INTENT_EXTRA_ALBUM_NAME, album.getName());
+            intent.putExtra(MediaPickerConstants.INTENT_EXTRA_SELECTION_MODE, multiSelectEnabled);
+            startActivityForResult(intent, MediaPickerConstants.REQUEST_CODE);
         }
     }
 
@@ -240,11 +239,11 @@ public class AlbumSelectActivity extends MediaPickerActivity implements OnAlbumS
 
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
             if (albumGridAdapter == null) {
-                sendMessage(Constants.FETCH_STARTED);
+                sendMessage(MediaPickerConstants.FETCH_STARTED);
             }
-            Cursor cursor = getApplicationContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, MediaStore.Images.Media.DATE_MODIFIED);
+            Cursor cursor = getApplicationContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, PROJECTION, null, null, MediaStore.Images.Media.DATE_MODIFIED);
             if (cursor == null) {
-                sendMessage(Constants.ERROR);
+                sendMessage(MediaPickerConstants.ERROR);
                 return;
             }
             ArrayList<Album> temp = new ArrayList<>(cursor.getCount());
@@ -257,11 +256,11 @@ public class AlbumSelectActivity extends MediaPickerActivity implements OnAlbumS
                         cursor.close();
                         return;
                     }
-                    long albumId = cursor.getLong(cursor.getColumnIndex(projection[0]));
-                    String album = cursor.getString(cursor.getColumnIndex(projection[1]));
-                    String image = cursor.getString(cursor.getColumnIndex(projection[2]));
-                    long albumTimestamp = cursor.getLong(cursor.getColumnIndex(projection[3]));
-                    String displayDate = new SimpleDateFormat("dd MMMM", Locale.getDefault()).format(new Date(albumTimestamp));
+                    long albumId = cursor.getLong(cursor.getColumnIndex(PROJECTION[0]));
+                    String album = cursor.getString(cursor.getColumnIndex(PROJECTION[1]));
+                    String image = cursor.getString(cursor.getColumnIndex(PROJECTION[2]));
+                    long albumTimestamp = cursor.getLong(cursor.getColumnIndex(PROJECTION[3]));
+                    String displayDate = new SimpleDateFormat("dd MMM", Locale.getDefault()).format(new Date(albumTimestamp));
                     if (!albumSet.contains(albumId)) {
                         /*
                         It may happen that some image file paths are still present in cache,
@@ -294,7 +293,7 @@ public class AlbumSelectActivity extends MediaPickerActivity implements OnAlbumS
                     "https://image.freepik.com/free-vector/flat-white-camera_23-2147490625.jpg"));*/
             albums.addAll(temp);
 
-            sendMessage(Constants.FETCH_COMPLETED);
+            sendMessage(MediaPickerConstants.FETCH_COMPLETED);
         }
     }
 
@@ -332,12 +331,13 @@ public class AlbumSelectActivity extends MediaPickerActivity implements OnAlbumS
     protected void permissionGranted() {
 
         Message message = handler.obtainMessage();
-        message.what = Constants.PERMISSION_GRANTED;
+        message.what = MediaPickerConstants.PERMISSION_GRANTED;
         message.sendToTarget();
     }
 
     @Override
     protected void hideViews() {
+
         gridView.setVisibility(View.INVISIBLE);
     }
 

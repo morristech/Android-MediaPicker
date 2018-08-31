@@ -35,10 +35,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static mobi.zapzap.mediapicker.Constants.ORDERBY;
-import static mobi.zapzap.mediapicker.Constants.PROJECTION;
-import static mobi.zapzap.mediapicker.Constants.URI;
-import static mobi.zapzap.mediapicker.Constants.sScrollbarAnimDuration;
+import static mobi.zapzap.mediapicker.MediaPickerConstants.DEFAULT_IMAGE_ORDER_BY;
+import static mobi.zapzap.mediapicker.MediaPickerConstants.IMAGE_DEFAULT_PROJECTION;
+import static mobi.zapzap.mediapicker.MediaPickerConstants.IMAGE_CONTENT_URI;
+import static mobi.zapzap.mediapicker.MediaPickerConstants.SCROLLBAR_ANIM_DURATION;
 
 /**
  * Created by Wade Morris on 2018/08/27.
@@ -147,7 +147,7 @@ public final class MediaPickerUtil {
     }
 
     public static Cursor getCursor(@NonNull Context context) {
-        return context.getContentResolver().query(URI, PROJECTION, null, null, ORDERBY);
+        return context.getContentResolver().query(IMAGE_CONTENT_URI, IMAGE_DEFAULT_PROJECTION, null, null, DEFAULT_IMAGE_ORDER_BY);
     }
 
     public static boolean isViewVisible(@Nullable View view) {
@@ -160,7 +160,7 @@ public final class MediaPickerUtil {
         scrollbar.setTranslationX(transX);
         scrollbar.setVisibility(View.VISIBLE);
         return scrollbar.animate().translationX(0f).alpha(1f)
-                .setDuration(sScrollbarAnimDuration)
+                .setDuration(SCROLLBAR_ANIM_DURATION)
                 .setListener(new AnimatorListenerAdapter() {
                     // adapter required for new alpha value to stick
                 });
