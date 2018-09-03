@@ -73,7 +73,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.preview_item_image, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_selection_preview, parent, false);
         if (viewType == MediaPickerConstants.VIEW_TYPE_HEADER) {
             return new EmptyViewHolder(view);
         } else {

@@ -5,17 +5,17 @@
     <item
         android:id="@id/menu_image_select_sort"
         android:icon="@drawable/ic_sort_ascending"
-        android:title="@string/sort"
+        android:title="@string/media_picker_sort"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@id/menu_image_list_view"
-        android:title="@string/show_list_view"
+        android:title="@string/media_picker_show_list_view"
         app:showAsAction="never"/>
 
     <item
         android:id="@id/menu_image_hide_sdcard"
-        android:title="@string/hide_sdcard"
+        android:title="@string/media_picker_hide_sdcard"
         app:showAsAction="never"/>
 
 </menu>

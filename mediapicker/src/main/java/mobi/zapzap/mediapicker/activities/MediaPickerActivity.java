@@ -43,7 +43,7 @@ public class MediaPickerActivity extends AppCompatActivity {
 
         Snackbar snackbar = Snackbar.make(
                 view,
-                getString(R.string.permission_info),
+                getString(R.string.media_picker_permission_info),
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(getResources().getString(R.string.media_picker_ok_label), new View.OnClickListener() {
 
@@ -66,15 +66,15 @@ public class MediaPickerActivity extends AppCompatActivity {
 
         Snackbar snackbar = Snackbar.make(
                 view,
-                getString(R.string.permission_force),
+                getString(R.string.media_picker_permission_force),
                 Snackbar.LENGTH_INDEFINITE)
-                .setAction(getString(R.string.permission_settings), new View.OnClickListener() {
+                .setAction(getString(R.string.media_picker_permission_settings), new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
 
                         Uri uri = Uri.fromParts(
-                                getString(R.string.permission_package),
+                                getString(R.string.media_picker_permission_package),
                                 MediaPickerActivity.this.getPackageName(),
                                 null);
 

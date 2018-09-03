@@ -16,6 +16,6 @@
         android:scaleType="centerCrop"
         tools:src="@tools:sample/avatars[4]" />
 
-    <include layout="@layout/layout_media_caption_input" />
+    <include layout="@layout/layout_caption_input" />
 
 </FrameLayout>

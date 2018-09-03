@@ -87,7 +87,7 @@ public class ImageSelectActivity extends MediaPickerActivity {
 
                 toggleSelection(position);
                 //actionMode.setTitle(countSelected + " " + getString(R.string.selected));
-                txtSelectCount.setText(countSelected + " " + getResources().getString(R.string.selected));
+                txtSelectCount.setText(countSelected + " " + getResources().getString(R.string.media_picker_selected_label));
                 txtSelectCount.setVisibility(View.VISIBLE);
                 tvAdd.setVisibility(View.VISIBLE);
                 tvProfile.setVisibility(View.GONE);
@@ -111,7 +111,7 @@ public class ImageSelectActivity extends MediaPickerActivity {
             isMultiSelection.set(!isMultiSelection.get());
             toggleSelection(position);
 
-            txtSelectCount.setText(getResources().getString(R.string.selected, countSelected));
+            txtSelectCount.setText(getResources().getString(R.string.media_picker_selected_label, countSelected));
             txtSelectCount.setVisibility(View.VISIBLE);
             tvAdd.setVisibility(View.VISIBLE);
             tvProfile.setVisibility(View.GONE);
@@ -144,7 +144,6 @@ public class ImageSelectActivity extends MediaPickerActivity {
         tvProfile = (TextView) findViewById(R.id.tvProfile);
         tvAdd = (TextView) findViewById(R.id.tvAdd);
         txtSelectCount = (TextView) findViewById(R.id.tvSelectCount);
-        tvProfile.setText(R.string.image_view);
         liFinish = (LinearLayout) findViewById(R.id.liFinish);
         txtErrorDisplay = (TextView) findViewById(R.id.text_view_error);
         txtErrorDisplay.setVisibility(View.INVISIBLE);
@@ -238,7 +237,7 @@ public class ImageSelectActivity extends MediaPickerActivity {
                             /* Some selected images may have been deleted hence update action mode title */
                             countSelected = msg.arg1;
                             //actionMode.setTitle(countSelected + " " + getString(R.string.selected));
-                            txtSelectCount.setText(getResources().getString(R.string.selected, countSelected));
+                            txtSelectCount.setText(getResources().getString(R.string.media_picker_selected_label, countSelected));
                             txtSelectCount.setVisibility(View.VISIBLE);
                             tvAdd.setVisibility(View.VISIBLE);
                             tvProfile.setVisibility(View.GONE);
@@ -353,7 +352,7 @@ public class ImageSelectActivity extends MediaPickerActivity {
             if (image != null) {
 
                 if (!image.isSelected() && countSelected >= MediaPickerConstants.DEFAULT_SELECTION_LIMIT) {
-                    Toast.makeText(getApplicationContext(), String.format(getResources().getString(R.string.limit_exceeded), MediaPickerConstants.DEFAULT_SELECTION_LIMIT), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), String.format(getResources().getString(R.string.media_picker_selection_limit_exceeded), MediaPickerConstants.DEFAULT_SELECTION_LIMIT), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 image.setSelected(!image.isSelected());

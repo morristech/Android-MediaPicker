@@ -1,32 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <string name="app_name">Media Picker</string>
-
-    <!--Request Permission-->
-    <string name="permission_info">App requires permission to Storage to view images.</string>
-    <string name="permission_force">App requires permission to Storage to view images. Tap Settings and go to Permissions to grant permission.</string>
-    <string name="permission_settings">Settings</string>
-    <string name="permission_package">package</string>
-
-    <string name="album_view">Select photo album</string>
-    <string name="image_view">Tap to select images</string>
-
-    <string name="sort">Sort</string>
-    <string name="hide_sdcard">Hide SD card</string>
-    <string name="show_list_view">List view</string>
-
-    <string name="selected">%1$d Selected</string>
-    <string name="limit_exceeded">Select a maximum of %1$d images.</string>
-    <string name="error_null_cursor">Oops, something went wrong!</string>
-    <string name="add">Add</string>
-    <string name="capture_photo">Capture Photo</string>
-
-    <string name="media_picker_selection_limiter">Can\'t select more than %1$d items.</string>
-    <string name="media_picker_ok_label">OK</string>
-    <string name="media_picker_tap_to_select">Tap photo to select</string>
-    <string name="media_picker_selected">Selected</string>
-    <string name="media_picker_recent">Recent</string>
+    <string name="app_name">Gallery</string>
+    <string name="media_picker_add">Add</string>
+    <string name="media_picker_capture_photo">Capture Photo</string>
+    <string name="media_picker_error_null_cursor">Oops, something went wrong!</string>
+    <string name="media_picker_hide_sdcard">Hide SD card</string>
     <string name="media_picker_last_month">Last Month</string>
     <string name="media_picker_last_week">Last Week</string>
-
+    <string name="media_picker_ok_label">OK</string>
+    <string name="media_picker_permission_force">App requires permission to Storage to view images. Tap Settings and go to Permissions to grant permission.</string>
+    <string name="media_picker_permission_info">App requires permission to Storage to view images.</string>
+    <string name="media_picker_permission_package">package</string>
+    <string name="media_picker_permission_settings">Settings</string>
+    <string name="media_picker_recent">Recent</string>
+    <string name="media_picker_selected">Selected</string>
+    <string name="media_picker_selected_label">%1$d Selected</string>
+    <string name="media_picker_selection_limit_exceeded">Select a maximum of %1$d images.</string>
+    <string name="media_picker_selection_limiter">Can\'t select more than %1$d items.</string>
+    <string name="media_picker_show_list_view">List view</string>
+    <string name="media_picker_sort">Sort</string>
+    <string name="media_picker_tap_to_select">Tap photo to select</string>
 </resources>

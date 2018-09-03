@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/toolbar_image_picker"
-        layout="@layout/custom_gallery_toolbar"
+        layout="@layout/toolbar_selection_preview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/error_null_cursor"
+        android:text="@string/media_picker_error_null_cursor"
         android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
@@ -28,7 +28,7 @@
         android:clipToPadding="false"
         tools:itemCount="15"
         tools:layoutManager="android.support.v7.widget.GridLayoutManager"
-        tools:listitem="@layout/grid_view_item_image"
+        tools:listitem="@layout/grid_item_image"
         tools:spanCount="3"/>
 
 </RelativeLayout>

@@ -5,7 +5,7 @@
     <item
         android:id="@id/menu_preview_delete"
         android:icon="@drawable/ic_bin"
-        android:title="@string/sort"
+        android:title="@string/media_picker_sort"
         app:showAsAction="ifRoom"/>
 
 </menu>

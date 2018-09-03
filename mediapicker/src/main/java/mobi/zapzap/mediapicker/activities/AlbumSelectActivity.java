@@ -83,7 +83,6 @@ public class AlbumSelectActivity extends MediaPickerActivity implements OnAlbumS
         errorDisplay.setVisibility(View.INVISIBLE);
 
         tvProfile = (TextView) findViewById(R.id.tvProfile);
-        tvProfile.setText(R.string.album_view);
         liFinish = (LinearLayout) findViewById(R.id.liFinish);
 
         gridView = (RecyclerView) findViewById(R.id.grid_view_album);
@@ -221,7 +220,7 @@ public class AlbumSelectActivity extends MediaPickerActivity implements OnAlbumS
     @Override
     public void onClick(@NonNull Album album, @NonNull View view, int position) {
 
-        if (album.getName().equals(getResources().getString(R.string.capture_photo))) {
+        if (album.getName().equals(getResources().getString(R.string.media_picker_capture_photo))) {
             //HelperClass.displayMessageOnScreen(getApplicationContext(), "HMM!", false);
         } else {
 

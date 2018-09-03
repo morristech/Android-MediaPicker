@@ -62,7 +62,7 @@
 
             <include
                 android:id="@+id/media_details"
-                layout="@layout/layout_toolbar_preview_info"/>
+                layout="@layout/layout_preview_info"/>
 
         </RelativeLayout>
 

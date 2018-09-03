@@ -16,12 +16,9 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import mobi.zapzap.mediapicker.MediaPickerConstants;
 import mobi.zapzap.mediapicker.R;
-import mobi.zapzap.mediapicker.callbacks.OnImageSelectionListener;
 import mobi.zapzap.mediapicker.callbacks.SectionIndexer;
 import mobi.zapzap.mediapicker.models.Image;
 import mobi.zapzap.mediapicker.widget.HeaderItemDecoration;
@@ -54,9 +51,9 @@ public class ImageGridAdapter extends ImagesAdapter implements HeaderItemDecorat
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (viewType == MediaPickerConstants.VIEW_TYPE_HEADER) {
-            return new HeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.header_row, parent, false));
+            return new HeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_grid_header, parent, false));
         } else {
-            return new ImageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_view_item_image, parent, false));
+            return new ImageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_item_image, parent, false));
         }
     }
 
@@ -100,7 +97,7 @@ public class ImageGridAdapter extends ImagesAdapter implements HeaderItemDecorat
 
     @Override
     public int getHeaderLayout(int headerPosition) {
-        return R.layout.header_row;
+        return R.layout.layout_grid_header;
     }
 
     @Override
